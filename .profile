@@ -16,9 +16,6 @@ if [ -n "$BASH_VERSION" ]; then
   fi
 fi
 
-# Add `~/bin` to the `$PATH`
-export PATH="$HOME/bin:$PATH";
-
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
@@ -27,10 +24,10 @@ for file in ~/.{path,exports,aliases,functions,extra}; do
 done;
 unset file;
 
-export ENV="development"
-
+# Add things to the `$PATH`
+export PATH="$HOME/bin:$PATH";
+export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/go/bin:$PATH"
-
 export PATH="$HOME/.cargo/bin:/usr/lib/go-1.10/bin:$PATH"
 export CSC_IDENTITY_AUTO_DISCOVERY=false
 
@@ -54,6 +51,9 @@ export PATH=$PATH:$HOME/.deno/bin
 
 # For python
 export PATH="$PATH:$HOME/Library/Python/3.7/bin"
+
+# For various personal projects
+export ENV="development"
 
 alias headers='curl -I -X GET'
 alias bim='vim'

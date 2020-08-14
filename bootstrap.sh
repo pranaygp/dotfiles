@@ -9,6 +9,7 @@ function doIt() {
     --exclude ".DS_Store" \
     --exclude "bootstrap.sh" \
     --exclude "README.md" \
+    --exclude "LICENSE.txt" \
     -avh --no-perms . ~
   source ~/.profile
 

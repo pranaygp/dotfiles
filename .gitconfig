@@ -76,12 +76,7 @@ log = true
 # https://git-scm.com/docs/git-config#git-config-pushdefault
 default = simple
 # Make `git push` push relevant annotated tags when pushing branches out.
-followTags = true
-
-[user]
-# Please adapt and uncomment the following lines:
-name = Pranay Prakash
-email = pranay.gp@gmail.com
+followTags = true│
 
 [pull]
 rebase = true
