@@ -1,0 +1,12 @@
+[submodule ".oh-my-zsh"]
+	path = .oh-my-zsh
+	url = git@github.com:ohmyzsh/ohmyzsh.git
+[submodule "init/oh-my-zsh/custom/plugins/zsh-completions"]
+	path = init/oh-my-zsh/custom/plugins/zsh-completions
+	url = git@github.com:zsh-users/zsh-completions.git
+[submodule "init/oh-my-zsh/custom/plugins/zsh-autosuggestions"]
+	path = init/oh-my-zsh/custom/plugins/zsh-autosuggestions
+	url = git@github.com:zsh-users/zsh-autosuggestions.git
+[submodule "init/oh-my-zsh/custom/plugins/kubetail"]
+	path = init/oh-my-zsh/custom/plugins/kubetail
+	url = git@github.com:johanhaleby/kubetail.git

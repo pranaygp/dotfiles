@@ -82,3 +82,6 @@ followTags = true
 # Please adapt and uncomment the following lines:
 name = Pranay Prakash
 email = pranay.gp@gmail.com
+
+[pull]
+rebase = true

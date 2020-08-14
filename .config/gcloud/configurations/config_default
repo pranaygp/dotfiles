@@ -1,0 +1,11 @@
+[core]
+account = pranay@windsor.io
+
+[compute]
+zone = us-west1-a
+
+[container]
+cluster = main
+
+[run]
+region = us-west1
