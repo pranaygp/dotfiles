@@ -1,4 +1,4 @@
-# Pranays’s dotfiles
+# Pranay’s dotfiles
 
 ## Installation
 
