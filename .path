@@ -1,0 +1,23 @@
+#!/usr/bin/env zsh
+# Add things to the `$PATH`
+
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/go/bin:$PATH"
+export PATH="$HOME/.cargo/bin:/usr/lib/go-1.10/bin:$PATH"
+
+# for java
+export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+export PATH=${JAVA_HOME}/bin:$PATH
+
+# for android
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+
+# for deno
+export PATH=$PATH:$HOME/.deno/bin
+
+# For python
+export PATH="$PATH:$HOME/Library/Python/3.7/bin"

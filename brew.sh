@@ -68,6 +68,7 @@ brew install redis
 brew install skaffold
 brew install speedtest
 brew install tmux
+brew install tree
 brew install watchman
 brew install wifi-password
 brew install --HEAD jabley/wrk2/wrk2
