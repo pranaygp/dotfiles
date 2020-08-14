@@ -11,10 +11,11 @@ function doIt() {
     --exclude "README.md" \
     --exclude "LICENSE.txt" \
     -avh --no-perms . ~
-  source ~/.profile
 
   rm -rf ~/.oh-my-zsh/custom
   cp -r ./init/oh-my-zsh/custom/ ~/.oh-my-zsh/custom/
+
+  source ~/.profile
 }
 
 if [ "$1" == "--force" -o "$1" == "-f" ]; then
