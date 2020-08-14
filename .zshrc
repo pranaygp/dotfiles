@@ -119,18 +119,19 @@ source $HOME/.profile
 
 # tabtab source for serverless package
 # uninstall by removing these lines or running `tabtab uninstall serverless`
-[[ -f /Users/pranaygp/.config/yarn/global/node_modules/tabtab/.completions/serverless.zsh ]] && . /Users/pranaygp/.config/yarn/global/node_modules/tabtab/.completions/serverless.zsh
+[[ -f "$HOME/.config/yarn/global/node_modules/tabtab/.completions/serverless.zsh" ]] && . "$HOME/.config/yarn/global/node_modules/tabtab/.completions/serverless.zsh"
 # tabtab source for sls package
 # uninstall by removing these lines or running `tabtab uninstall sls`
-[[ -f /Users/pranaygp/.config/yarn/global/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/pranaygp/.config/yarn/global/node_modules/tabtab/.completions/sls.zsh
+[[ -f "$HOME/.config/yarn/global/node_modules/tabtab/.completions/sls.zsh" ]] && . "$HOME/.config/yarn/global/node_modules/tabtab/.completions/sls.zsh"
 # tabtab source for slss package
 # uninstall by removing these lines or running `tabtab uninstall slss`
-[[ -f /Users/pranaygp/.config/yarn/global/node_modules/tabtab/.completions/slss.zsh ]] && . /Users/pranaygp/.config/yarn/global/node_modules/tabtab/.completions/slss.zsh
+[[ -f "$HOME/.config/yarn/global/node_modules/tabtab/.completions/slss.zsh" ]] && . "$HOME/.config/yarn/global/node_modules/tabtab/.completions/slss.zsh"
+
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/pranaygp/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/pranaygp/Downloads/google-cloud-sdk/path.zsh.inc'; fi
-
+if [ -f "$HOME/Downloads/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/Downloads/google-cloud-sdk/path.zsh.inc"; fi
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/pranaygp/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/pranaygp/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f "$HOME/Downloads/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/Downloads/google-cloud-sdk/completion.zsh.inc"; fi
 
+# The next line sets up the iterm2 shell integration for zsh
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
