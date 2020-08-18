@@ -13,4 +13,8 @@ Thumbs.db
 .Spotlight-V100
 .Trashes
 
+# I create .TODO files in my repos to manage a personal project TODO list
+.TODO
+
+# For the dotfiles repo itself
 .extra
