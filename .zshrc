@@ -8,13 +8,14 @@ fpath=(~/.zsh/completion $fpath)
 export EDITOR="vim"
 export NVM_DIR="$HOME/.nvm"
 export GOPATH=$HOME/go
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
 
   autoload -Uz compinit
-    rm -f ~/.zcompdump; compinit
+  rm -f ~/.zcompdump
+  compinit
 fi
 
 # Path to your oh-my-zsh installation.
@@ -50,13 +51,12 @@ ZSH_THEME="robbyrussell"
 
 # Uncomment the following line to disable auto-setting terminal title.
 DISABLE_AUTO_TITLE="true"
-function precmd () {
+function precmd() {
   # window_title="print -Pn - '\e]1;%c\a'"
   # echo -ne "$window_title"
   echo -ne "\e]0;${PWD##*/}\a"
   # echo -ne "\e]1;$PWD\a"
 }
-
 
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
@@ -116,7 +116,6 @@ source $HOME/.profile
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-
 # tabtab source for serverless package
 # uninstall by removing these lines or running `tabtab uninstall serverless`
 [[ -f "$HOME/.config/yarn/global/node_modules/tabtab/.completions/serverless.zsh" ]] && . "$HOME/.config/yarn/global/node_modules/tabtab/.completions/serverless.zsh"
@@ -135,3 +134,5 @@ if [ -f "$HOME/Downloads/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/D
 # The next line sets up the iterm2 shell integration for zsh
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+export PROMPT="$PROMPT"'$(~/.iterm2/it2setkeylabel set status \
+  "$(test -d .git && (git rev-parse --abbrev-ref HEAD) || (echo -n "Not a repo"))")'
