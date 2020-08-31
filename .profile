@@ -25,3 +25,26 @@ for file in ~/.{path,exports,aliases,functions,extra}; do
 	[ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+###-begin-browse-completions-###
+#
+# yargs command completion script
+#
+# Installation: browse completion >> ~/.zshrc
+#    or browse completion >> ~/.zsh_profile on OSX.
+#
+_browse_yargs_completions()
+{
+  local reply
+  local si=$IFS
+  IFS=$'
+' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" browse --get-yargs-completions "${words[@]}"))
+  IFS=$si
+  _describe 'values' reply
+}
+compdef _browse_yargs_completions browse
+###-end-browse-completions-###
+
