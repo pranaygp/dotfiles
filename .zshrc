@@ -1,22 +1,22 @@
 autoload -Uz compinit && compinit -i
 
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH.
 fpath=(~/.zsh/completion $fpath)
 
 # custom exports
 export EDITOR="vim"
 export NVM_DIR="$HOME/.nvm"
 export GOPATH=$HOME/go
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
-if type brew &>/dev/null; then
-  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+# if type brew &>/dev/null; then
+#   FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
 
-  autoload -Uz compinit
-  rm -f ~/.zcompdump
-  compinit
-fi
+#   autoload -Uz compinit
+#   rm -f ~/.zcompdump
+#   compinit
+# fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -41,7 +41,7 @@ ZSH_THEME="robbyrussell"
 # HYPHEN_INSENSITIVE="true"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
+# DISABLE_AUTO_UPDATE="true" # Should be done via dotfiles submodule
 
 # Uncomment the following line to change how often to auto-update (in days).
 # export UPDATE_ZSH_DAYS=13
@@ -52,10 +52,7 @@ ZSH_THEME="robbyrussell"
 # Uncomment the following line to disable auto-setting terminal title.
 DISABLE_AUTO_TITLE="true"
 function precmd() {
-  # window_title="print -Pn - '\e]1;%c\a'"
-  # echo -ne "$window_title"
   echo -ne "\e]0;${PWD##*/}\a"
-  # echo -ne "\e]1;$PWD\a"
 }
 
 # Uncomment the following line to enable command auto-correction.
@@ -81,7 +78,7 @@ function precmd() {
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git kubetail yarn kubectl zsh-autosuggestions zsh-completions)
+plugins=(git kubetail yarn kubectl)
 autoload -U compinit && compinit
 
 source $ZSH/oh-my-zsh.sh
@@ -92,7 +89,7 @@ source $HOME/.profile
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -105,7 +102,7 @@ source $HOME/.profile
 # export ARCHFLAGS="-arch x86_64"
 
 # ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
+export SSH_KEY_PATH="~/.ssh/id_rsa"
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
