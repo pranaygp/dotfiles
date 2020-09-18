@@ -61,6 +61,7 @@ brew install kafkacat
 brew install librdkafka
 brew install mosh
 brew install nmap
+brew install pngcrush
 brew install postgresql
 brew install python@3.8
 brew link --overwrite python@3.8
