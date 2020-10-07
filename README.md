@@ -9,19 +9,19 @@
 You can clone the repository wherever you want. (I like to keep it in `~/github/dotfiles`) The bootstrapper script will pull in the latest version and copy the files to your home folder.
 
 ```bash
-git clone https://github.com/pranaygp/dotfiles.git && cd dotfiles && ./bootstrap.sh
+git clone https://github.com/pranaygp/dotfiles.git && cd dotfiles && source ./bootstrap.sh
 ```
 
 To update, `cd` into your local `dotfiles` repository and then:
 
 ```bash
-./bootstrap.sh
+source ./bootstrap.sh
 ```
 
 Alternatively, to update while avoiding the confirmation prompt:
 
 ```bash
-set -- -f; ./bootstrap.sh
+set -- -f; source  ./bootstrap.sh
 ```
 
 ### Git-free install
