@@ -1,5 +1,3 @@
-autoload -Uz compinit && compinit -i
-
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH.
 fpath=(~/.zsh/completion $fpath)
@@ -12,10 +10,6 @@ export GOPATH=$HOME/go
 # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 # if type brew &>/dev/null; then
 #   FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
-
-#   autoload -Uz compinit
-#   rm -f ~/.zcompdump
-#   compinit
 # fi
 
 # Path to your oh-my-zsh installation.
@@ -79,7 +73,6 @@ function precmd() {
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git kubetail yarn kubectl)
-autoload -U compinit && compinit
 
 source $ZSH/oh-my-zsh.sh
 source $HOME/.profile
@@ -131,5 +124,9 @@ if [ -f "$HOME/Downloads/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/D
 # The next line sets up the iterm2 shell integration for zsh
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-export PROMPT="$PROMPT"'$(~/.iterm2/it2setkeylabel set status \
-  "$(test -d .git && (git rev-parse --abbrev-ref HEAD) || (echo -n "Not a repo"))")'
+# The following lines were added by compinstall
+zstyle :compinstall filename '/Users/pranaygp/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
