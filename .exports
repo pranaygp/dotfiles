@@ -43,5 +43,9 @@ export LDFLAGS=-L/usr/local/opt/openssl/lib
 # For electron code signing
 export CSC_IDENTITY_AUTO_DISCOVERY=false
 
+# Set pager variables for programs like psql
+export PAGER=less
+export LESS="-iMSx4 -RSFX -e"
+
 # For various personal projects
 export ENV="development"

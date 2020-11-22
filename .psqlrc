@@ -6,8 +6,8 @@
 \set ON_ERROR_ROLLBACK interactive
 -- show execution times
 \timing
--- limit paging
-\pset pager off
+-- paging
+\pset pager on
 -- replace nulls
 \pset null ¤
 \pset linestyle unicode
