@@ -72,7 +72,7 @@ function precmd() {
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git kubetail yarn kubectl)
+plugins=(git kubetail yarn kubectl aws)
 
 source $ZSH/oh-my-zsh.sh
 source $HOME/.profile
@@ -130,3 +130,5 @@ zstyle :compinstall filename '/Users/pranaygp/.zshrc'
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
+
+autoload bashcompinit && bashcompinit
