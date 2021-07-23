@@ -150,3 +150,13 @@ alias headers='curl -I -X GET'
 alias bim='vim'
 alias start_clipper='ssh -f -N dev-clipper; clipper'
 alias dus='du -sch .[!.]* * |sort -h'
+
+# alias to wrap node with nq
+alias qnode="NQDIR=/tmp/windsor nq node"
+alias fq="NQDIR=/tmp/windsor fq"
+
+# alias to wrap node with doppler
+alias dnode="doppler run -- node"
+
+# alias to wrap node with nq and doppler
+alias qdnode="NQDIR=/tmp/windsor nq doppler run -- node"

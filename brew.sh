@@ -61,6 +61,7 @@ brew install kafkacat
 brew install librdkafka
 brew install mosh
 brew install nmap
+brew install nq
 brew install pngcrush
 brew install postgresql
 brew install python@3.8
