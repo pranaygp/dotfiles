@@ -217,3 +217,18 @@ function awssecret() {
 	fi
 	echo $JSON
 }
+
+function prunesqaushed() {
+	git checkout -q master
+	git for-each-ref refs/heads/ "--format=%(refname:short)" |
+		while read branch; do
+			mergeBase=$(git merge-base master $branch)
+			tree=$(git rev-parse $branch^{tree})
+			newcommit=$(git commit-tree $tree -p $mergeBase -m _)
+			cherry=$(git cherry master $newcommit)
+			if [[ $cherry == "-"* ]]; then
+				echo "$branch is merged into master and will be deleted"
+				git branch -D $branch
+			fi
+		done
+}
