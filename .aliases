@@ -160,3 +160,7 @@ alias dnode="doppler run -- node"
 
 # alias to wrap node with nq and doppler
 alias qdnode="NQDIR=/tmp/windsor nq doppler run -- node"
+
+# alias for snowql
+alias snowsql="/Applications/SnowSQL.app/Contents/MacOS/snowsql"
+
