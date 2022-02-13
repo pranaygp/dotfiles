@@ -10,3 +10,6 @@
 [submodule "init/oh-my-zsh/custom/plugins/kubetail"]
 	path = init/oh-my-zsh/custom/plugins/kubetail
 	url = git@github.com:johanhaleby/kubetail.git
+[submodule "init/oh-my-zsh/custom/plugins/zsh-vi-mode"]
+	path = init/oh-my-zsh/custom/plugins/zsh-vi-mode
+	url = https://github.com/jeffreytse/zsh-vi-mode
