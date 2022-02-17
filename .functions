@@ -235,5 +235,12 @@ function prunesqaushed() {
 
 function creategif() {
 	filename="${1%.*}"
-	ffmpeg -t 4 -i $1 -vf "fps=10,scale=380:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 -y "$filename.gif"
+	ffmpeg \
+		-t 4 \
+		-i $1 \
+		-i ~/Documents/Windsor/assets/play_icon.png \
+		-filter_complex "[1:v]scale=300:300[ovrl];[0:v][ovrl]overlay=(main_w-overlay_w)/2:(main_h-overlay_h)/2,fps=10,scale=380:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" \
+		-loop 0 \
+		-y \
+		"$filename.gif"
 }
