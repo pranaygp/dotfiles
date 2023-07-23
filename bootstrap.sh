@@ -21,9 +21,15 @@ function doIt() {
     --exclude "init/" \
     --exclude ".DS_Store" \
     --exclude "bootstrap.sh" \
+    --exclude "update.sh" \
     --exclude "README.md" \
     --exclude "LICENSE.txt" \
     -avh --no-perms --update --times . ~
+
+  if [[ "$(uname -s)" == "Linux" ]]; then
+    echo "Running .linux script"
+    ./.linux
+  fi
 
   rm -rf ~/.oh-my-zsh/custom
   cp -r ./init/oh-my-zsh/custom/ ~/.oh-my-zsh/custom/
@@ -34,9 +40,10 @@ function doIt() {
 if [ "$1" = "--force" -o "$1" = "-f" -o "$CODESPACES" ]; then
   doIt
 else
-  read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " choice
-  if [[ $reply =~ ^[Yy]$ ]]; then
+  read -p "This may overwrite existing files in your home directory. Are you sure? (y/n): " choice
+  if [[ $choice =~ ^[Yy]$ ]]; then
     doIt
   fi
 fi
 unset doIt
+unset choice

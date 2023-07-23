@@ -74,6 +74,7 @@ brew install tree
 brew install watchman
 brew install wifi-password
 brew install --HEAD jabley/wrk2/wrk2
+brew install zoxide
 brew install zstd
 
 # Remove outdated versions from the cellar.

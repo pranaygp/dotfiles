@@ -15,6 +15,7 @@ files=$(find "$SCRIPT_DIR" -maxdepth 1 -type f \
   ! -name "init/" \
   ! -name ".DS_Store" \
   ! -name "bootstrap.sh" \
+  ! -name "update.sh" \
   ! -name "README.md" \
   ! -name "LICENSE.txt" \
 )

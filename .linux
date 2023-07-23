@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Function to check if zoxide is installed
+is_zoxide_installed() {
+  command -v zoxide >/dev/null 2>&1
+}
+
+if ! is_zoxide_installed; then
+  echo "Zoxide is not installed. Proceeding with installation..."
+  
+  curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+
+  echo "Zoxide installed successfully!"
+else
+  echo "Zoxide is already installed"
+fi
