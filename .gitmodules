@@ -13,3 +13,6 @@
 [submodule "init/oh-my-zsh/custom/plugins/zsh-vi-mode"]
 	path = init/oh-my-zsh/custom/plugins/zsh-vi-mode
 	url = https://github.com/jeffreytse/zsh-vi-mode
+[submodule "init/oh-my-zsh/custom/plugins/zsh-syntax-highlighting"]
+	path = init/oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git

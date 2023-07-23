@@ -80,8 +80,8 @@ function zvm_before_init() {
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git yarn docker aws zoxide zsh-vi-mode fzf)
-# plugins=(git kubetail yarn kubectl aws zoxide zsh-vi-mode fzf) # temp disabling these since I don't use them
+plugins=(git yarn docker aws zoxide zsh-vi-mode fzf zsh-syntax-highlighting)
+# plugins=(git kubetail yarn kubectl aws zoxide zsh-vi-mode fzf zsh-syntax-highlighting) # temp disabling these since I don't use them
 
 source $ZSH/oh-my-zsh.sh
 source $HOME/.profile
