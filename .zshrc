@@ -133,11 +133,9 @@ if [ -f "$HOME/Downloads/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/D
 # The next line sets up the iterm2 shell integration for zsh
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-# The following lines were added by compinstall
-zstyle :compinstall filename '/Users/pranaygp/.zshrc'
-
 autoload -Uz compinit
-compinit
-# End of lines added by compinstall
-
-autoload bashcompinit && bashcompinit
+if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump) ]; then
+  compinit
+else
+  compinit -C
+fi
