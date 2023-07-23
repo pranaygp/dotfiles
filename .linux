@@ -8,9 +8,9 @@ is_zoxide_installed() {
 if ! is_zoxide_installed; then
   echo "Zoxide is not installed. Proceeding with installation..."
   
-  sudo apt install zoxide
-  sudo apt install fzf
-  sudo apt install bat
+  sudo apt install -y zoxide
+  sudo apt install -y fzf
+  sudo apt install -y bat
 
   echo "Zoxide installed successfully!"
 else
