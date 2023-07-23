@@ -161,6 +161,8 @@ alias dnode="doppler run -- node"
 # alias to wrap node with nq and doppler
 alias qdnode="NQDIR=/tmp/windsor nq doppler run -- node"
 
-# alias for snowql
+# alias for snowsql
 alias snowsql="/Applications/SnowSQL.app/Contents/MacOS/snowsql"
 
+# alias for using fzf with bat preview
+alias fb="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
