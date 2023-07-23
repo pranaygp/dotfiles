@@ -1,15 +1,15 @@
 [submodule ".oh-my-zsh"]
 	path = .oh-my-zsh
-	url = git@github.com:ohmyzsh/ohmyzsh.git
+	url = https://github.com/ohmyzsh/ohmyzsh
 [submodule "init/oh-my-zsh/custom/plugins/zsh-completions"]
 	path = init/oh-my-zsh/custom/plugins/zsh-completions
-	url = git@github.com:zsh-users/zsh-completions.git
+	url = https://github.com/zsh-users/zsh-completions
 [submodule "init/oh-my-zsh/custom/plugins/zsh-autosuggestions"]
 	path = init/oh-my-zsh/custom/plugins/zsh-autosuggestions
-	url = git@github.com:zsh-users/zsh-autosuggestions.git
+	url = https://github.com/zsh-users/zsh-autosuggestions
 [submodule "init/oh-my-zsh/custom/plugins/kubetail"]
 	path = init/oh-my-zsh/custom/plugins/kubetail
-	url = git@github.com:johanhaleby/kubetail.git
+	url = https://github.com/johanhaleby/kubetail
 [submodule "init/oh-my-zsh/custom/plugins/zsh-vi-mode"]
 	path = init/oh-my-zsh/custom/plugins/zsh-vi-mode
 	url = https://github.com/jeffreytse/zsh-vi-mode
