@@ -212,6 +212,7 @@ function awssecret() {
 		--secret-id $1 |
 		jq -r '.SecretString | fromjson')
 	if [[ -z ${2+x} ]]; then
+		:
 	else
 		JSON=$(echo $JSON | jq -r $2)
 	fi

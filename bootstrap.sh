@@ -2,7 +2,17 @@
 
 cd "$(dirname "${BASH_SOURCE}")"
 
-git pull origin master
+unset choice
+if [ "$1" = "--force" -o "$1" = "-f" -o "$CODESPACES" ]; then
+  :
+else
+  read -p "Would you like to run ./update.sh first to sync in changes from your home directory (y/n)?: " choice
+  if [[ $reply =~ ^[Yy]$ ]]; then
+    ./update.sh
+  fi
+fi
+
+unset doIt
 git submodule update --init --recursive
 git submodule update --recursive
 
@@ -13,7 +23,7 @@ function doIt() {
     --exclude "bootstrap.sh" \
     --exclude "README.md" \
     --exclude "LICENSE.txt" \
-    -avh --no-perms . ~
+    -avh --no-perms --update --times . ~
 
   rm -rf ~/.oh-my-zsh/custom
   cp -r ./init/oh-my-zsh/custom/ ~/.oh-my-zsh/custom/
@@ -21,12 +31,11 @@ function doIt() {
   source ~/.profile
 }
 
-if [ "$1" = "--force" -o "$1" = "-f" ]; then
+if [ "$1" = "--force" -o "$1" = "-f" -o "$CODESPACES" ]; then
   doIt
 else
-  read "REPLY?This may overwrite existing files in your home directory. Are you sure? (y/n) "
-  echo ""
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
+  read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " choice
+  if [[ $reply =~ ^[Yy]$ ]]; then
     doIt
   fi
 fi
