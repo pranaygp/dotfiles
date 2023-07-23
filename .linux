@@ -8,7 +8,7 @@ is_zoxide_installed() {
 if ! is_zoxide_installed; then
   echo "Zoxide is not installed. Proceeding with installation..."
   
-  curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+  apt install zoxide
 
   echo "Zoxide installed successfully!"
 else
