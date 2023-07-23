@@ -4,10 +4,7 @@ fpath=(~/.zsh/completion $fpath)
 
 # custom exports
 export EDITOR="vim"
-export NVM_DIR="$HOME/.nvm"
 export GOPATH=$HOME/go
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 # if type brew &>/dev/null; then
 #   FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
 # fi
@@ -80,8 +77,7 @@ function zvm_before_init() {
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git yarn docker aws zoxide zsh-vi-mode fzf zsh-syntax-highlighting)
-# plugins=(git kubetail yarn kubectl aws zoxide zsh-vi-mode fzf zsh-syntax-highlighting) # temp disabling these since I don't use them
+plugins=(git docker aws zoxide zsh-vi-mode fzf zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 source $HOME/.profile
