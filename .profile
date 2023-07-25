@@ -33,6 +33,7 @@ declare -a NODE_GLOBALS=(`find ~/.nvm/versions/node -maxdepth 3 -type l -wholena
 
 NODE_GLOBALS+=("node")
 NODE_GLOBALS+=("nvm")
+NODE_GLOBALS+=("yarn")
 
 load_nvm () {
     export NVM_DIR=~/.nvm
