@@ -6,6 +6,9 @@
 # settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
 
+# Gain permissions to write to Preferences
+sudo chmod 755 ~/Library/Preferences/
+
 # Ask for the administrator password upfront
 sudo -v
 
@@ -186,7 +189,7 @@ sudo pmset -a autorestart 1
 sudo systemsetup -setrestartfreeze on
 
 # Sleep the display after 15 minutes
-sudo pmset -a displaysleep 15
+sudo pmset -a displaysleep 5
 
 # Disable machine sleep while charging
 sudo pmset -c sleep 0
