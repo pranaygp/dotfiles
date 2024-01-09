@@ -77,6 +77,12 @@ log = true
 default = simple
 # Make `git push` push relevant annotated tags when pushing branches out.
 followTags = true
+# automatically setup remote on git push on a new branch
+autoSetupRemote = true
 
 [pull]
 rebase = true
+[diff "sopsdiffer"]
+	textconv = sops -d
+[fetch]
+	prune = true
