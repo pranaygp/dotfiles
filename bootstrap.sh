@@ -6,7 +6,8 @@ unset choice
 if [ "$1" = "--force" -o "$1" = "-f" -o "$CODESPACES" ]; then
   :
 else
-  read -p "Would you like to run ./update.sh first to sync in changes from your home directory (y/n)?: " choice
+  echo "Would you like to run ./update.sh first to sync in changes from your home directory (y/n)?: "
+  read choice
   if [[ $reply =~ ^[Yy]$ ]]; then
     ./update.sh
   fi
@@ -48,7 +49,8 @@ function doIt() {
 if [ "$1" = "--force" -o "$1" = "-f" -o "$CODESPACES" ]; then
   doIt
 else
-  read -p "This may overwrite existing files in your home directory. Are you sure? (y/n): " choice
+  echo "This may overwrite existing files in your home directory. Are you sure? (y/n): "
+  read choice
   if [[ $choice =~ ^[Yy]$ ]]; then
     doIt
   fi

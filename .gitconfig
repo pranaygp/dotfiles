@@ -8,11 +8,12 @@ whitespace = fix
 # Show most recently changed branches first.
 sort = -committerdate
 
+# make sure VSCode and the `code` shell command
 [core]
-editor = vim
+editor = code --wait --new-window
 
 # Use custom `.gitignore`.
-excludesfile = ~/.gitignore
+excludesFile = ~/.gitignore
 
 # Treat spaces before tabs and all kinds of trailing whitespace as an error.
 # [default] trailing-space: looks for spaces at the end of a line
@@ -86,3 +87,15 @@ rebase = true
 	textconv = sops -d
 [fetch]
 	prune = true
+[commit]
+	gpgSign = true
+[rebase]
+	instructionFormat = (%an <%ae>) %s
+
+# For my work laptop
+[includeIf "gitdir:~/front/"]
+	path = ~/front/.gitconfig
+
+# For my personal laptop
+[includeIf "gitdir:~/github/"]
+	path = ~/github/.gitconfig
