@@ -15,7 +15,7 @@ files=$(
     ! -name "init/" \
     ! -name ".DS_Store" \
     ! -name "bootstrap.sh" \
-    ! -name "update.sh" \
+    ! -name "diff.sh" \
     ! -name "README.md" \
     ! -name "LICENSE.txt"
 )

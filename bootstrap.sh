@@ -6,10 +6,10 @@ unset choice
 if [ "$1" = "--force" -o "$1" = "-f" -o "$CODESPACES" ]; then
   :
 else
-  echo "Would you like to run ./update.sh first to sync in changes from your home directory (y/n)?: "
+  echo "Would you like to run ./diff.sh first to diff changes from your home directory (y/n)?: "
   read choice
   if [[ $reply =~ ^[Yy]$ ]]; then
-    ./update.sh
+    ./diff.sh
   fi
 fi
 
@@ -29,7 +29,7 @@ function doIt() {
     --exclude "init/" \
     --exclude ".DS_Store" \
     --exclude "bootstrap.sh" \
-    --exclude "update.sh" \
+    --exclude "diff.sh" \
     --exclude "README.md" \
     --exclude "LICENSE.txt" \
     -avh --no-perms --update --times . ~
