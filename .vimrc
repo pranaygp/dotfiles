@@ -1,9 +1,11 @@
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
+
 call plug#begin('~/.vim/plugged')
+
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'stephpy/vim-yaml'
@@ -19,14 +21,13 @@ Plug 'rust-lang/rust.vim'
 Plug 'alampros/vim-styled-jsx'
 Plug 'lifepillar/vim-mucomplete'
 Plug 'rhysd/vim-color-spring-night'
-Plug '~/github/windsor/windsor-vim'
+Plug 'junegunn/fzf'
+
 call plug#end()
 
-" Required:
-filetype plugin indent on
-
-" Turn on syntax highlighting
-syntax enable
+" Automatically executed by plug
+" filetype plugin indent on
+" syntax enable
 
 " Requires for 256 colors in OS X iTerm(2)
 set t_Co=256

@@ -70,11 +70,36 @@ function zvm_before_init() {
   zvm_bindkey vicmd '^[[B' history-beginning-search-forward
 }
 
+# Configuration for the zsh omz plugin
+# https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nvm
+if type brew &>/dev/null; then
+  NVM_HOMEBREW=$(brew --prefix nvm)
+fi
+
+# Lazy load NVM when any node based executable is run
+declare -a NODE_GLOBALS=(
+  $(
+    find ~/.nvm/versions/node -maxdepth 3 -type l -wholename '*/bin/*' \
+      ! -name 'node' \
+      ! -name 'npm' \
+      ! -name 'npx' \
+      ! -name 'pnpm' \
+      ! -name 'yarn' |
+      xargs -n1 basename | sort | uniq
+  )
+)
+
+zstyle ':omz:plugins:nvm' lazy yes
+zstyle ':omz:plugins:nvm' lazy-cmd "${NODE_GLOBALS[@]}"
+
+# Automatically load .nvmrc when found in a directory
+zstyle ':omz:plugins:nvm' autoload yes
+
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git docker aws zoxide zsh-vi-mode fzf zsh-syntax-highlighting)
+plugins=(git zoxide fzf nvm zsh-vi-mode zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 source $HOME/.profile
