@@ -2,7 +2,7 @@
 # Add things to the `$PATH`
 
 # for python
-export PATH="$PATH:$HOME/Library/Python/3.8/bin"
+export PATH="$PATH:$(python3 -m site --user-base)/bin"
 export PATH="$HOME/miniconda3/bin:$PATH" # conda python gets precedence
 
 # for deno
