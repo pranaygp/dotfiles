@@ -51,6 +51,7 @@ brew install php
 brew install gmp
 
 # Install other useful binaries.
+brew install 1password-cli
 brew install bat
 brew install deno
 brew install ffmpeg

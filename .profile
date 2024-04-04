@@ -44,3 +44,6 @@ load_nvm() {
 for cmd in "${NODE_GLOBALS[@]}"; do
   eval "${cmd}(){ unset -f ${NODE_GLOBALS}; load_nvm; ${cmd} \$@ }"
 done
+
+# Setup 1Password plugins
+source "$HOME/.op/plugins.sh"
