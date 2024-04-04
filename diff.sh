@@ -20,23 +20,17 @@ files=$(
     ! -name "LICENSE.txt"
 )
 
+echo Diffing changed files. ~ version will be on the left
+
 # Loop through the files and compare timestamps with their corresponding files in the home directory
 for file in $files; do
   filename=$(basename "$file")
   home_file="$HOME/$filename"
 
   if [ -f "$home_file" ]; then
-    dotfiles_timestamp=$(date -r "$file" +%s)
-    home_timestamp=$(date -r "$home_file" +%s)
-
-    if [ $dotfiles_timestamp -gt $home_timestamp ]; then
-      echo "File: $filename. dotfiles repo is newer."
-      code --diff "$file" "$home_file"
-    elif [ $dotfiles_timestamp -lt $home_timestamp ]; then
-      echo "File: $filename. home file version is newer."
+    if ! cmp --silent "$file" "$home_file"; then
+      echo "$filename has changed. Diffing..."
       code --diff "$home_file" "$file"
-    else
-      continue
     fi
 
   fi
