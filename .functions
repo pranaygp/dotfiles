@@ -250,3 +250,38 @@ function timezsh() {
 	shell=${1-$SHELL}
 	for i in $(seq 1 10); do /usr/bin/time $shell -i -c exit; done
 }
+
+function speed_gif() {
+	filename="${1%.*}"
+	output="$filename.speed.gif"
+
+	small="$filename.small.gif"
+	unoptimized="$filename.unoptimized.gif"
+
+	if [[ -n $2 ]]; then
+		echo Resizing GIF
+		gifsicle --colors=255 --resize-fit-width $2 $1 -o $small
+	else
+		echo Recolorizing GIF
+		gifsicle --colors=255 $1 -o $small
+	fi
+
+	echo Unoptimizing GIF
+	gifsicle -U $small -o $unoptimized
+
+	# Get the number of frames
+	osname="$(uname -s)"
+	if [[ $osname -eq "Darwin" ]]; then
+		numframes=$(gifsicle $unoptimized -I | head -n 1 | awk '{print $3}')
+	else
+		numframes=$(gifsicle $unoptimized -I | grep -P "\d+ images" --only-matching | grep -P "\d+" --only-matching)
+	fi
+
+	echo "Number of frames in GIF: $numframes"
+
+	gifsicle $unoptimized $(seq -f "#%g" 0 2 $numframes) -O3 --lossy=30 -o "$output"
+
+	echo "Clean up"
+	rm $small $unoptimized
+
+}

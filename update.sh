@@ -31,16 +31,13 @@ for file in $files; do
 
     if [ $dotfiles_timestamp -gt $home_timestamp ]; then
       echo "File: $filename. dotfiles repo is newer."
+      code --diff "$file" "$home_file"
     elif [ $dotfiles_timestamp -lt $home_timestamp ]; then
       echo "File: $filename. home file version is newer."
+      code --diff "$home_file" "$file"
     else
       continue
     fi
 
-    echo "Want to see the difference? (y/n):"
-    read choice
-    if [ "$choice" == "y" ] || [ "$choice" == "Y" ]; then
-      code --diff "$home_file" "$file"
-    fi
   fi
 done
