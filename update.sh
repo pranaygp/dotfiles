@@ -5,19 +5,19 @@
 
 set -euo pipefail
 
-
 # Get the current script's directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # List all files in the script's directory
-files=$(find "$SCRIPT_DIR" -maxdepth 1 -type f \
-  ! -name '.git' \
-  ! -name "init/" \
-  ! -name ".DS_Store" \
-  ! -name "bootstrap.sh" \
-  ! -name "update.sh" \
-  ! -name "README.md" \
-  ! -name "LICENSE.txt" \
+files=$(
+  find "$SCRIPT_DIR" -maxdepth 1 -type f \
+    ! -name '.git' \
+    ! -name "init/" \
+    ! -name ".DS_Store" \
+    ! -name "bootstrap.sh" \
+    ! -name "update.sh" \
+    ! -name "README.md" \
+    ! -name "LICENSE.txt"
 )
 
 # Loop through the files and compare timestamps with their corresponding files in the home directory
@@ -30,15 +30,17 @@ for file in $files; do
     home_timestamp=$(date -r "$home_file" +%s)
 
     if [ $dotfiles_timestamp -gt $home_timestamp ]; then
-      echo "File: $filename. dotfiles repo is newer. run \"source bootstrap.sh\" to update"
+      echo "File: $filename. dotfiles repo is newer."
     elif [ $dotfiles_timestamp -lt $home_timestamp ]; then
       echo "File: $filename. home file version is newer."
-      read -p "Want to see the difference? (y/n):" choice
-      if [ "$choice" == "y" ] || [ "$choice" == "Y" ]; then
-        code --diff "$home_file" "$file" 
-      else
-        echo "Comparison skipped."
-      fi
+    else
+      continue
+    fi
+
+    echo "Want to see the difference? (y/n):"
+    read choice
+    if [ "$choice" == "y" ] || [ "$choice" == "Y" ]; then
+      code --diff "$home_file" "$file"
     fi
   fi
 done

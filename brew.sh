@@ -41,6 +41,8 @@ brew link --overwrite gnupg
 
 # Install more recent versions of some macOS tools.
 brew install vim
+brew install git
+brew link --overwrite git
 brew install grep
 brew install openssh
 brew install openssl@1.1
@@ -50,10 +52,12 @@ brew install gmp
 
 # Install other useful binaries.
 brew install bat
+brew install deno
 brew install ffmpeg
-brew install git
-brew install git-lfs
+brew install fzf
 brew install gh
+brew install gifsicle
+brew install git-lfs
 brew install htop
 brew install httpie
 brew install imagemagick
@@ -65,8 +69,8 @@ brew install nmap
 brew install nq
 brew install pngcrush
 brew install postgresql
-brew install python@3.8
-brew link --overwrite python@3.8
+brew install python@3.10
+brew link --overwrite python@3.10
 brew install redis
 brew install skaffold
 brew install speedtest
@@ -75,7 +79,6 @@ brew install tree
 brew install watchman
 brew install wifi-password
 brew install --HEAD jabley/wrk2/wrk2
-brew install fzf
 brew install zoxide
 brew install zstd
 
