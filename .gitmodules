@@ -1,18 +1,18 @@
 [submodule ".oh-my-zsh"]
-	path = .oh-my-zsh
-	url = https://github.com/ohmyzsh/ohmyzsh
+path = .oh-my-zsh
+url = https://github.com/ohmyzsh/ohmyzsh
 [submodule "init/oh-my-zsh/custom/plugins/zsh-completions"]
-	path = init/oh-my-zsh/custom/plugins/zsh-completions
-	url = https://github.com/zsh-users/zsh-completions
+path = init/oh-my-zsh/custom/plugins/zsh-completions
+url = https://github.com/zsh-users/zsh-completions
 [submodule "init/oh-my-zsh/custom/plugins/zsh-autosuggestions"]
-	path = init/oh-my-zsh/custom/plugins/zsh-autosuggestions
-	url = https://github.com/zsh-users/zsh-autosuggestions
+path = init/oh-my-zsh/custom/plugins/zsh-autosuggestions
+url = https://github.com/zsh-users/zsh-autosuggestions
 [submodule "init/oh-my-zsh/custom/plugins/kubetail"]
-	path = init/oh-my-zsh/custom/plugins/kubetail
-	url = https://github.com/johanhaleby/kubetail
+path = init/oh-my-zsh/custom/plugins/kubetail
+url = https://github.com/johanhaleby/kubetail
 [submodule "init/oh-my-zsh/custom/plugins/zsh-vi-mode"]
-	path = init/oh-my-zsh/custom/plugins/zsh-vi-mode
-	url = https://github.com/jeffreytse/zsh-vi-mode
+path = init/oh-my-zsh/custom/plugins/zsh-vi-mode
+url = https://github.com/jeffreytse/zsh-vi-mode
 [submodule "init/oh-my-zsh/custom/plugins/zsh-syntax-highlighting"]
-	path = init/oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+path = init/oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+url = https://github.com/zsh-users/zsh-syntax-highlighting.git

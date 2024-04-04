@@ -2,12 +2,12 @@
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -30,10 +30,10 @@ if [[ -o interactive ]]; then
     # e.g., iterm2_set_user_var currentDirectory $PWD
     # Accessible in iTerm2 (in a badge now, elsewhere in the future) as
     # \(user.currentDirectory).
-    whence -v iterm2_print_user_vars > /dev/null 2>&1
+    whence -v iterm2_print_user_vars >/dev/null 2>&1
     if [ $? -ne 0 ]; then
       iterm2_print_user_vars() {
-          true
+        true
       }
     fi
 
@@ -142,10 +142,10 @@ if [[ -o interactive ]]; then
     # If hostname -f is slow on your system set iterm2_hostname prior to
     # sourcing this script.
     if [ -z "${iterm2_hostname-}" ]; then
-      iterm2_hostname=`hostname -f 2>/dev/null`
+      iterm2_hostname=$(hostname -f 2>/dev/null)
       # Some flavors of BSD (i.e. NetBSD and OpenBSD) don't have the -f option.
       if [ $? -ne 0 ]; then
-	iterm2_hostname=`hostname`
+        iterm2_hostname=$(hostname)
       fi
     fi
 
@@ -159,4 +159,17 @@ if [[ -o interactive ]]; then
     printf "\033]1337;ShellIntegrationVersion=11;shell=zsh\007"
   fi
 fi
-alias imgcat=${HOME}/.iterm2/imgcat;alias imgls=${HOME}/.iterm2/imgls;alias it2api=${HOME}/.iterm2/it2api;alias it2attention=${HOME}/.iterm2/it2attention;alias it2check=${HOME}/.iterm2/it2check;alias it2copy=${HOME}/.iterm2/it2copy;alias it2dl=${HOME}/.iterm2/it2dl;alias it2getvar=${HOME}/.iterm2/it2getvar;alias it2git=${HOME}/.iterm2/it2git;alias it2setcolor=${HOME}/.iterm2/it2setcolor;alias it2setkeylabel=${HOME}/.iterm2/it2setkeylabel;alias it2ul=${HOME}/.iterm2/it2ul;alias it2universion=${HOME}/.iterm2/it2universion
+
+alias imgcat=${HOME}/.iterm2/imgcat
+alias imgls=${HOME}/.iterm2/imgls
+alias it2api=${HOME}/.iterm2/it2api
+alias it2attention=${HOME}/.iterm2/it2attention
+alias it2check=${HOME}/.iterm2/it2check
+alias it2copy=${HOME}/.iterm2/it2copy
+alias it2dl=${HOME}/.iterm2/it2dl
+alias it2getvar=${HOME}/.iterm2/it2getvar
+alias it2git=${HOME}/.iterm2/it2git
+alias it2setcolor=${HOME}/.iterm2/it2setcolor
+alias it2setkeylabel=${HOME}/.iterm2/it2setkeylabel
+alias it2ul=${HOME}/.iterm2/it2ul
+alias it2universion=${HOME}/.iterm2/it2universion
