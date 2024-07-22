@@ -8,11 +8,22 @@ export PATH="$HOME/miniconda3/bin:$PATH" # conda python gets precedence
 # for deno
 export PATH="$PATH:$HOME/.deno/bin"
 
+# bun
+export PATH="$PATH:$HOME/.bun/bin"
+
+# pnpm
+export PNPM_HOME="/Users/pranaygp/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PATH:$PNPM_HOME" ;;
+esac
+# pnpm end
+
 # for go
 export PATH="$PATH:$HOME/go/bin"
 
 # for rust
-export PATH="$PATH:$HOME/.cargo/bin"
+. "$HOME/.cargo/env"
 
 # for java
 if [ -f "$JAVA_HOME" ]; then
