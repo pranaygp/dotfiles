@@ -8,9 +8,13 @@ whitespace = fix
 # Show most recently changed branches first.
 sort = -committerdate
 
-# make sure VSCode and the `code` shell command
 [core]
+
+# make sure Code/Cursor and the `code` shell command are installed
 editor = code --wait --new-window
+
+# use git-delta as pager
+pager = delta
 
 # Use custom `.gitignore`.
 excludesFile = ~/.gitignore
@@ -62,6 +66,10 @@ untracked = cyan
 # Detect copies as well as renames.
 renames = copies
 
+# for git-delta
+colorMoved = default
+
+
 [diff "bin"]
 
 # Use `hexdump` to diff binary files.
@@ -71,6 +79,9 @@ textconv = hexdump -v -C
 
 # Include summaries of merged commits in newly created merge commit messages
 log = true
+
+# For git-delta
+conflictstyle = diff3
 
 [push]
 
@@ -91,6 +102,14 @@ rebase = true
 	gpgSign = true
 [rebase]
 	instructionFormat = (%an <%ae>) %s
+
+[interactive]
+# for git-delta
+diffFilter = delta --color-only
+
+[delta]
+# for git-delta
+navigate = true
 
 # For my work laptop
 [includeIf "gitdir:~/front/"]

@@ -197,7 +197,7 @@ function httpstat() {
 }
 
 # Print list of all branches that don't exist on the remote
-function local-only-branches() {
+function localbranches() {
 	EXISTING=$(git branch -r | awk 'BEGIN { FS = "/" } ; { print $2 }')
 	for b in $(git branch | grep -v '*'); do
 		if [[ "$EXISTING" != *"$b"* ]]; then
@@ -251,7 +251,7 @@ function timezsh() {
 	for i in $(seq 1 10); do /usr/bin/time $shell -i -c exit; done
 }
 
-function speed_gif() {
+function speedgif() {
 	filename="${1%.*}"
 	output="$filename.speed.gif"
 
@@ -283,5 +283,12 @@ function speed_gif() {
 
 	echo "Clean up"
 	rm $small $unoptimized
+}
 
+function splitcsv() {
+	local base="$(basename ${1%.csv})"
+	split -l $2 -d $1 "${base}_";
+	for i in $(find ${base}_*); do mv $i "$i.csv"; done
+	for i in $(find . -type f -name "${base}_*.csv" -not -name "${base}_00.csv");
+		do echo -e "$(head -1 ${base}_00.csv)\n$(cat $i)" > $i; done
 }
