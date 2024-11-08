@@ -58,20 +58,23 @@ brew install ffmpeg
 brew install fzf
 brew install gh
 brew install gifsicle
+brew install git-delta
 brew install git-lfs
 brew install htop
 brew install httpie
 brew install imagemagick
 brew install jq
 brew install kafkacat
+brew install less # recommended for git-delta
+brew link --overwrite less
 brew install librdkafka
 brew install mosh
 brew install nmap
 brew install nq
 brew install pngcrush
 brew install postgresql
-brew install python@3.10
-brew link --overwrite python@3.10
+brew install python@3.12
+brew link --overwrite python@3.12
 brew install redis
 brew install skaffold
 brew install speedtest
