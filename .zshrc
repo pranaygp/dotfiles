@@ -6,6 +6,9 @@ fpath=(~/.zsh/completion $fpath)
 #   FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
 # fi
 
+# Setup homebrew path. Needs to be done early ahead of .path
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 

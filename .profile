@@ -27,4 +27,4 @@ done
 unset file
 
 # Setup 1Password plugins
-source "$HOME/.op/plugins.sh" || echo "[warn] 1Password CLI plugins are not setup"
+source "$HOME/.config/op/plugins.sh" || source "$HOME/.op/plugins.sh" || echo "[warn] 1Password CLI plugins are not setup"
