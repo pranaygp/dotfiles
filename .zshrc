@@ -102,10 +102,14 @@ zstyle ':omz:plugins:nvm' autoload yes
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zoxide fzf nvm zsh-vi-mode zsh-syntax-highlighting)
+if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+  plugins=(git zoxide fzf nvm kubectl zsh-syntax-highlighting)
+else
+  plugins=(git zoxide fzf nvm kubectl zsh-vi-mode zsh-syntax-highlighting)
+fi
 
 source $ZSH/oh-my-zsh.sh
-source $HOME/.profile
+# source $HOME/.profile
 
 # User configuration
 
@@ -120,9 +124,9 @@ source $HOME/.profile
 [[ -f "$HOME/.config/yarn/global/node_modules/tabtab/.completions/slss.zsh" ]] && . "$HOME/.config/yarn/global/node_modules/tabtab/.completions/slss.zsh"
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f "$HOME/Downloads/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/Downloads/google-cloud-sdk/path.zsh.inc"; fi
+if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
 # The next line enables shell command completion for gcloud.
-if [ -f "$HOME/Downloads/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/Downloads/google-cloud-sdk/completion.zsh.inc"; fi
+if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
 
 # The next line sets up the iterm2 shell integration for zsh
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
