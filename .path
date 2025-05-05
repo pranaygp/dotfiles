@@ -2,8 +2,11 @@
 # Add things to the `$PATH`
 
 # for python
+export PATH="$(brew --prefix)/opt/python@3.12/libexec/bin:$PATH"
 export PATH="$PATH:$(python3 -m site --user-base)/bin"
-export PATH="$HOME/miniconda3/bin:$PATH" # conda python gets precedence
+
+# for google cloud sdk (after python code above)
+export CLOUDSDK_PYTHON="/usr/local/opt/python@3.12/libexec/bin/python3"
 
 # for deno
 export PATH="$PATH:$HOME/.deno/bin"
@@ -12,7 +15,7 @@ export PATH="$PATH:$HOME/.deno/bin"
 export PATH="$PATH:$HOME/.bun/bin"
 
 # pnpm
-export PNPM_HOME="/Users/pranaygp/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PATH:$PNPM_HOME" ;;
