@@ -114,3 +114,7 @@ diffFilter = delta --color-only
 [delta]
 # for git-delta
 navigate = true
+
+# For my personal laptop
+[includeIf "gitdir:~/github/"]
+	path = ~/github/.gitconfig

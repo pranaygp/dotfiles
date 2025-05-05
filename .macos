@@ -24,10 +24,10 @@ done 2>/dev/null &
 ###############################################################################
 
 # Set computer name (as done via System Preferences → Sharing)
-sudo scutil --set ComputerName "Dawnbook"
-sudo scutil --set HostName "Dawnbook"
-sudo scutil --set LocalHostName "Dawnbook"
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "Dawnbook"
+sudo scutil --set ComputerName "pranaygp"
+sudo scutil --set HostName "pranaygp"
+sudo scutil --set LocalHostName "pranaygp"
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "pranaygp"
 
 # Disable the sound effects on boot
 sudo nvram SystemAudioVolume=" "
