@@ -26,11 +26,9 @@ for file in ~/.{path,exports,aliases,functions,extra,secrets}; do
 done
 unset file
 
-# Setup 1Password plugins
+# Setup 1Password plugins if they exist
 if [ -f "$HOME/.config/op/plugins.sh" ]; then
   source "$HOME/.config/op/plugins.sh"
 elif [ -f "$HOME/.op/plugins.sh" ]; then
   source "$HOME/.op/plugins.sh"
-else
-  echo "[warn] 1Password CLI plugins are not setup"
 fi

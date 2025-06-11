@@ -109,7 +109,7 @@ else
 fi
 
 source $ZSH/oh-my-zsh.sh
-# source $HOME/.profile
+source $HOME/.profile
 
 # User configuration
 

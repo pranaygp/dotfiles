@@ -20,7 +20,7 @@ git submodule update --recursive
 function doIt() {
   if [ ! -d "${HOME}/.nvm/.git" ]; then
     echo "Make sure to install nvm first"
-    echo "You may use this command in a zsh shell - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
+    echo "You may use this command in a zsh shell - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash"
     echo "Or check the nvm repo for the latest instructions"
     exit 1
   fi
