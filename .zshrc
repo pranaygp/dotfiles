@@ -7,7 +7,11 @@ fpath=(~/.zsh/completion $fpath)
 # fi
 
 # Setup homebrew path. Needs to be done early ahead of .path
-eval "$(/opt/homebrew/bin/brew shellenv)"
+if [ -d /opt/homebrew/bin ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -d /usr/local/bin ]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
