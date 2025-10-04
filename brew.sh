@@ -65,6 +65,7 @@ brew install httpie
 brew install imagemagick
 brew install jq
 brew install kafkacat
+brew install lazygit
 brew install less # recommended for git-delta
 brew link --overwrite less
 brew install librdkafka
@@ -76,7 +77,7 @@ brew install postgresql
 brew install python@3.12
 brew link --overwrite python@3.12
 brew install redis
-brew install skaffold
+brew install ripgrep
 brew install speedtest
 brew install tmux
 brew install tree

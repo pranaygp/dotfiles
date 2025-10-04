@@ -62,7 +62,7 @@ export PAGER=less
 export LESS="-iMSx4 -RSFX -e"
 
 # For various personal projects
-export NODE_ENV="development"
+# export NODE_ENV="development"
 
 # Fix for terraform AWS provider bug on M1 - https://github.com/hashicorp/terraform-provider-aws/issues/20274#issuecomment-996795241
 export GODEBUG=asyncpreemptoff=1
