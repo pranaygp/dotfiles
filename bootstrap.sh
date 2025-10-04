@@ -18,12 +18,20 @@ git submodule update --init --recursive
 git submodule update --recursive
 
 function doIt() {
-  if [ ! -d "${HOME}/.nvm/.git" ]; then
-    echo "Make sure to install nvm first"
-    echo "You may use this command in a zsh shell - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash"
-    echo "Or check the nvm repo for the latest instructions"
+  # check if fnm is installed
+  if ! command -v "fnm" &>/dev/null; then
+    echo "fnm does not exist or is not executable."
+    echo "Install fnm first - https://github.com/Schniz/fnm"
+    echo "Or run the brew.sh script first on mac to install it via homebrew"
     exit 1
   fi
+  
+  # if [ ! -d "${HOME}/.nvm/.git" ]; then
+  #   echo "Make sure to install nvm first"
+  #   echo "You may use this command in a zsh shell - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash"
+  #   echo "Or check the nvm repo for the latest instructions"
+  #   exit 1
+  # fi
 
   rsync --exclude ".git/" \
     --exclude "init/" \
@@ -32,6 +40,7 @@ function doIt() {
     --exclude "diff.sh" \
     --exclude "README.md" \
     --exclude "LICENSE.txt" \
+    --exclude "brew.sh" \
     -avh --no-perms --update --times . ~
 
   if [[ "$(uname -s)" == "Linux" ]]; then

@@ -15,6 +15,9 @@ Thumbs.db
 
 # I create .TODO files in my repos to manage a personal project TODO list
 .TODO
-
-# For the dotfiles repo itself
+ 
+# And I create .extra folders all the time for personal stuff in git repos
 .extra
+
+# Claude creates these files automatically
+**/.claude/settings.local.json
