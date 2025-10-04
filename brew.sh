@@ -56,8 +56,10 @@ brew link --overwrite python@3.12
 
 # Install other useful binaries.
 brew install 1password-cli
+brew install ast-grep
 brew install bat
 brew install deno
+brew install fd
 brew install ffmpeg
 brew install fzf
 brew install gh
@@ -72,6 +74,7 @@ brew install kafkacat
 brew install lazygit
 brew install librdkafka
 brew install mosh
+brew install neovim
 brew install nmap
 brew install nq
 brew install pngcrush
