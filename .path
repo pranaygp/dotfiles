@@ -43,3 +43,6 @@ export PATH="$PATH:$ANDROID_HOME/platform-tools"
 
 # for Snowflake SnowSQL
 export PATH="$PATH:/Applications/SnowSQL.app/Contents/MacOS"
+
+# for claude
+export PATH="$HOME/.local/bin:$PATH"

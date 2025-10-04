@@ -118,3 +118,20 @@ navigate = true
 # For my personal laptop
 [includeIf "gitdir:~/github/"]
 	path = ~/github/.gitconfig
+
+# Git Commit Signing
+[gpg]
+  format = ssh
+[gpg "ssh"]
+  program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[filter "lfs"]
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+  clean = git-lfs clean -- %f
+
+# User config
+[user]
+	name = Pranay Prakash
+	email = pranay.gp@gmail.com
+	signingkey = ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCoMEPTypPkGG7vNYVtoz5/15uYE3WOOQ7okGjkClYQXs03ETfSgEK3nkLbik6Y36cx73YkFPlowcTeFCiLfV2HQtNW/1kgnRdenNblIMXtM24U7JQZJCHFY0pPnDbCXYxOZbzagrWxrZDxW4hZM11Q5Tf4i+OOaHGZ8bVxHl6nHlsOGdab2XWq8JQN9RiXrMqyE4A4XHDstYcDMPehL9jzlU9asLD1riHDUQm/AwsXP0L15xbLKmEWybEzePP8gXsNHDxtgXqBKWWaiycelXnl1E27Hoh56k+jf6Vyy0+e4aK+C6IkC2kZmt/oxVbob3J9YKhAoAiAh9biDXygmMpn

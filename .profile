@@ -32,3 +32,5 @@ if [ -f "$HOME/.config/op/plugins.sh" ]; then
 elif [ -f "$HOME/.op/plugins.sh" ]; then
   source "$HOME/.op/plugins.sh"
 fi
+
+. "$HOME/.cargo/env"

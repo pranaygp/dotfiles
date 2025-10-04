@@ -10,6 +10,7 @@ alias -- -="cd -"
 
 # Shortcuts
 alias g="cd ~/github"
+alias v="cd ~/github/vercel"
 alias dl="cd ~/Downloads"
 alias dt="cd ~/Desktop"
 
@@ -156,12 +157,6 @@ alias q="NQDIR=/tmp/nq_main nq"
 alias qtail="NQDIR=/tmp/nq_main nqtail"
 alias qterm="NQDIR=/tmp/nq_main nqterm"
 
-# alias to wrap node with doppler
-alias dnode="doppler run -- node"
-
-# alias to wrap node with nq and doppler
-alias qdnode="NQDIR=/tmp/windsor nq doppler run -- node"
-
 # alias for snowsql
 alias snowsql="/Applications/SnowSQL.app/Contents/MacOS/snowsql"
 
@@ -176,3 +171,7 @@ alias cat="bat --paging=never"
 
 # pipe into this to prevent output buffering
 alias nobuf="stdbuf -i0 -o0 -e0"
+
+# other common utils
+alias p="pnpm"
+alias t="turbo"

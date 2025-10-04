@@ -79,37 +79,41 @@ function zvm_before_init() {
 
 # Configuration for the zsh omz plugin
 # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nvm
-if type brew &>/dev/null; then
-  NVM_HOMEBREW=$(brew --prefix nvm)
-fi
+# if type brew &>/dev/null; then
+#   NVM_HOMEBREW=$(brew --prefix nvm)
+# fi
 
+# Disabled nvm setup since we use fnm now (installed later)
 # Lazy load NVM when any node based executable is run
-declare -a NODE_GLOBALS=(
-  $(
-    find ~/.nvm/versions/node -maxdepth 3 -type l -wholename '*/bin/*' \
-      ! -name 'node' \
-      ! -name 'npm' \
-      ! -name 'npx' \
-      ! -name 'pnpm' \
-      ! -name 'yarn' |
-      xargs -n1 basename | sort | uniq
-  )
-)
+# declare -a NODE_GLOBALS=(
+#   $(
+#     find ~/.nvm/versions/node -maxdepth 3 -type l -wholename '*/bin/*' \
+#       ! -name 'node' \
+#       ! -name 'npm' \
+#       ! -name 'npx' \
+#       ! -name 'pnpm' \
+#       ! -name 'yarn' |
+#       xargs -n1 basename | sort | uniq
+#   )
+# )
+# zstyle ':omz:plugins:nvm' lazy yes
+# zstyle ':omz:plugins:nvm' lazy-cmd "${NODE_GLOBALS[@]}"
+# # Automatically load .nvmrc when found in a directory
+# zstyle ':omz:plugins:nvm' autoload yes
 
-zstyle ':omz:plugins:nvm' lazy yes
-zstyle ':omz:plugins:nvm' lazy-cmd "${NODE_GLOBALS[@]}"
-
-# Automatically load .nvmrc when found in a directory
-zstyle ':omz:plugins:nvm' autoload yes
+# fnm setup
+eval "$(fnm env --use-on-cd --shell zsh)"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-  plugins=(git zoxide fzf nvm kubectl zsh-syntax-highlighting)
+  # plugins=(git zoxide fzf nvm aws zsh-syntax-highlighting)
+  plugins=(git zoxide fzf aws zsh-syntax-highlighting)
 else
-  plugins=(git zoxide fzf nvm kubectl zsh-vi-mode zsh-syntax-highlighting)
+  # plugins=(git zoxide fzf aws nvm zsh-vi-mode zsh-syntax-highlighting)
+  plugins=(git zoxide fzf aws zsh-vi-mode zsh-syntax-highlighting)
 fi
 
 source $ZSH/oh-my-zsh.sh
@@ -117,27 +121,50 @@ source $HOME/.profile
 
 # User configuration
 
-# tabtab source for serverless package
-# uninstall by removing these lines or running `tabtab uninstall serverless`
-[[ -f "$HOME/.config/yarn/global/node_modules/tabtab/.completions/serverless.zsh" ]] && . "$HOME/.config/yarn/global/node_modules/tabtab/.completions/serverless.zsh"
-# tabtab source for sls package
-# uninstall by removing these lines or running `tabtab uninstall sls`
-[[ -f "$HOME/.config/yarn/global/node_modules/tabtab/.completions/sls.zsh" ]] && . "$HOME/.config/yarn/global/node_modules/tabtab/.completions/sls.zsh"
-# tabtab source for slss package
-# uninstall by removing these lines or running `tabtab uninstall slss`
-[[ -f "$HOME/.config/yarn/global/node_modules/tabtab/.completions/slss.zsh" ]] && . "$HOME/.config/yarn/global/node_modules/tabtab/.completions/slss.zsh"
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
-# The next line enables shell command completion for gcloud.
-if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
-
-# The next line sets up the iterm2 shell integration for zsh
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
 autoload -Uz compinit
 if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump) ]; then
   compinit
 else
   compinit -C
 fi
+
+# The next line sets up the iterm2 shell integration for zsh
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
+# The next line enables shell command completion for gcloud.
+if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
+
+# Setup aws CLI completion
+AWS_COMPLETER=$(which aws_completer)
+if [ -f "$AWS_COMPLETER" ]; then
+  complete -C "$AWS_COMPLETER" aws
+fi
+
+
+# bun completions
+[ -s "/Users/pranaygp/.bun/_bun" ] && source "/Users/pranaygp/.bun/_bun"
+
+# Graphite CLI completion
+#compdef gt
+###-begin-gt-completions-###
+#
+# yargs command completion script
+#
+# Installation: gt completion >> ~/.zshrc
+#    or gt completion >> ~/.zprofile on OSX.
+#
+_gt_yargs_completions()
+{
+  local reply
+  local si=$IFS
+  IFS=$'
+' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" gt --get-yargs-completions "${words[@]}"))
+  IFS=$si
+  _describe 'values' reply
+}
+compdef _gt_yargs_completions gt
+###-end-gt-completions-###
+

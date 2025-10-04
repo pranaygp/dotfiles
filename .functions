@@ -292,3 +292,44 @@ function splitcsv() {
 	for i in $(find . -type f -name "${base}_*.csv" -not -name "${base}_00.csv");
 		do echo -e "$(head -1 ${base}_00.csv)\n$(cat $i)" > $i; done
 }
+
+# Clone a repo in the ~/github/{org}/{repo} format
+# Usage: ghclone org/repo  OR  ghclone https://github.com/org/repo
+function ghc() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: ghclone org/repo or ghclone https://github.com/org/repo"
+    return 1
+  fi
+  
+  # Extract org and repo from different input formats
+  if [[ "$1" =~ ^https?:// ]]; then
+    # Handle full URL
+    local repo_path=$(echo "$1" | sed -E 's#https?://github.com/([^/]+)/([^/]+)(\.git)?#\1/\2#')
+  else
+    # Handle org/repo format
+    local repo_path="$1"
+  fi
+  
+  local org=$(echo "$repo_path" | cut -d'/' -f1)
+  local repo=$(echo "$repo_path" | cut -d'/' -f2 | sed 's/\.git$//')
+  
+  local target_dir="$HOME/github/$org/$repo"
+  
+  if [[ -d "$target_dir" ]]; then
+    echo "Repository already exists at $target_dir"
+    cd "$target_dir"
+    return 0
+  fi
+  
+  mkdir -p "$HOME/github/$org"
+  git clone "https://github.com/$org/$repo.git" "$target_dir" && cd "$target_dir"
+}
+
+# Navigate to a repo using fuzzy search
+# Usage: gcd (then select from list)
+function ghcd() {
+  local repo=$(find ~/github -mindepth 2 -maxdepth 2 -type d | sed "s|$HOME/github/||" | fzf --preview 'bat --color=always --style=header,grid ~/github/{}/.git/config 2>/dev/null || echo "No git config found"')
+  if [[ -n "$repo" ]]; then
+    cd "$HOME/github/$repo"
+  fi
+}
