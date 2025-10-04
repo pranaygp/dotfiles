@@ -328,7 +328,7 @@ function ghc() {
 # Navigate to a repo using fuzzy search
 # Usage: gcd (then select from list)
 function ghcd() {
-  local repo=$(find ~/github -mindepth 2 -maxdepth 2 -type d | sed "s|$HOME/github/||" | fzf --preview 'bat --color=always --style=header,grid ~/github/{}/.git/config 2>/dev/null || echo "No git config found"')
+  local repo=$(find ~/github -mindepth 2 -maxdepth 2 -type d | sed "s|$HOME/github/||" | fzf --preview 'cd ~/github/{} && git status')
   if [[ -n "$repo" ]]; then
     cd "$HOME/github/$repo"
   fi

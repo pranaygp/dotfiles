@@ -19,7 +19,8 @@ export ZSH="$HOME/.oh-my-zsh"
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="robbyrussell"
+# Disabled to use starship prompt instead
+ZSH_THEME=""
 
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
@@ -110,10 +111,10 @@ eval "$(fnm env --use-on-cd --shell zsh)"
 # Add wisely, as too many plugins slow down shell startup.
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
   # plugins=(git zoxide fzf nvm aws zsh-syntax-highlighting)
-  plugins=(git zoxide fzf aws zsh-syntax-highlighting)
+  plugins=(git zoxide fzf aws starship zsh-syntax-highlighting)
 else
   # plugins=(git zoxide fzf aws nvm zsh-vi-mode zsh-syntax-highlighting)
-  plugins=(git zoxide fzf aws zsh-vi-mode zsh-syntax-highlighting)
+  plugins=(git zoxide fzf aws zsh-vi-mode starship zsh-syntax-highlighting)
 fi
 
 source $ZSH/oh-my-zsh.sh

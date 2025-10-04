@@ -49,6 +49,10 @@ brew install openssl@1.1
 brew install screen
 brew install php
 brew install gmp
+brew install less # recommended for git-delta
+brew link --overwrite less
+brew install python@3.12
+brew link --overwrite python@3.12
 
 # Install other useful binaries.
 brew install 1password-cli
@@ -66,19 +70,16 @@ brew install imagemagick
 brew install jq
 brew install kafkacat
 brew install lazygit
-brew install less # recommended for git-delta
-brew link --overwrite less
 brew install librdkafka
 brew install mosh
 brew install nmap
 brew install nq
 brew install pngcrush
 brew install postgresql
-brew install python@3.12
-brew link --overwrite python@3.12
 brew install redis
 brew install ripgrep
 brew install speedtest
+brew install starship
 brew install tmux
 brew install tree
 brew install watchman
