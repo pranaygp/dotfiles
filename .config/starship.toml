@@ -20,10 +20,9 @@ command = '''
 relative="${PWD#$HOME/github/}"
 org=$(echo "$relative" | cut -d'/' -f1)
 repo=$(echo "$relative" | cut -d'/' -f2)
-echo -e "\e]8;;https://github.com/$org/$repo\\e\\\\$org/$repo\e]8;;\e\\"
-# echo "$org/$repo"
+printf '\e]8;;https://github.com/%s/%s\e\\%s/%s\e]8;;\e\\' "$org" "$repo" "$org" "$repo"
 '''
-format = '[github\([$output]($style bold underline)\)]($style italic) '
+format = '[github\([$output]($style bold underline)\)]($style italic)'
 style = "green"
 
 # [custom.github_repo_subpath]

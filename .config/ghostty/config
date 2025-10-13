@@ -1,0 +1,5 @@
+theme = Vercel
+background = #000000
+font-family = GeistMono Nerd Font Mono
+font-size = 14
+keybind = global:alt+space=toggle_quick_terminal
