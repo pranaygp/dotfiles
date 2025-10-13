@@ -78,6 +78,28 @@ function zvm_before_init() {
   zvm_bindkey vicmd '^[[B' history-beginning-search-forward
 }
 
+# Configure zsh-vi-mode
+function zvm_config() {
+  # Don't append mode indicator to prompt
+  # ZVM_VI_EDITOR='none'
+  # ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BLINKING_BLOCK
+  # ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
+}
+
+function zle-line-init zle-keymap-select {
+  RPS1="${${KEYMAP/vicmd/-- NORMAL --}/(main|viins)/-- INSERT --}"
+  RPS2=$RPS1
+  zle reset-prompt
+}
+
+# Initialize starship AFTER zsh-vi-mode
+function zvm_after_init() {
+  eval "$(starship init zsh)"
+}
+
+zle -N zle-line-init
+zle -N zle-keymap-select
+
 # Configuration for the zsh omz plugin
 # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nvm
 # if type brew &>/dev/null; then
@@ -111,14 +133,19 @@ eval "$(fnm env --use-on-cd --shell zsh)"
 # Add wisely, as too many plugins slow down shell startup.
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
   # plugins=(git zoxide fzf nvm aws zsh-syntax-highlighting)
-  plugins=(git zoxide fzf aws starship zsh-syntax-highlighting)
+  plugins=(git zoxide fzf aws zsh-syntax-highlighting)
 else
   # plugins=(git zoxide fzf aws nvm zsh-vi-mode zsh-syntax-highlighting)
-  plugins=(git zoxide fzf aws zsh-vi-mode starship zsh-syntax-highlighting)
+  plugins=(git zoxide fzf aws zsh-vi-mode zsh-syntax-highlighting)
 fi
 
 source $ZSH/oh-my-zsh.sh
 source $HOME/.profile
+
+# Initialize starship for VSCode (zsh-vi-mode handles it otherwise)
+if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+  eval "$(starship init zsh)"
+fi
 
 # User configuration
 
