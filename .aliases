@@ -175,3 +175,4 @@ alias nobuf="stdbuf -i0 -o0 -e0"
 # other common utils
 alias p="pnpm"
 alias t="turbo"
+alias n="nvim"

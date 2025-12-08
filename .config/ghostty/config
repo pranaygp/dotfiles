@@ -1,4 +1,4 @@
-theme = Vercel
+theme = dark:Vercel,light:Catppuccin Latte
 background = #000000
 font-family = GeistMono Nerd Font Mono
 font-size = 14

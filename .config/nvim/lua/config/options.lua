@@ -9,3 +9,7 @@ vim.opt.guifont = "GeistMono Nerd Font Mono:h14"
 
 -- Ensure Treesitter highlighting takes priority over LSP semantic tokens
 vim.g.semantic_tokens_enabled = true
+
+-- Set terminal window title to project name
+vim.opt.title = true
+vim.opt.titlestring = "%{fnamemodify(getcwd(), ':t')}"
