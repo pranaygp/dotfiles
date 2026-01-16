@@ -7,9 +7,9 @@ fpath=(~/.zsh/completion $fpath)
 # fi
 
 # Setup homebrew path. Needs to be done early ahead of .path
-if [ -d /opt/homebrew/bin ]; then
+if [ -x /opt/homebrew/bin/brew ]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
-elif [ -d /usr/local/bin ]; then
+elif [ -x /usr/local/bin/brew ]; then
   eval "$(/usr/local/bin/brew shellenv)"
 fi
 
@@ -124,8 +124,10 @@ zle -N zle-keymap-select
 # # Automatically load .nvmrc when found in a directory
 # zstyle ':omz:plugins:nvm' autoload yes
 
-# fnm setup
-eval "$(fnm env --use-on-cd --shell zsh)"
+# fnm setup (check if fnm exists first)
+if command -v fnm &> /dev/null; then
+  eval "$(fnm env --use-on-cd --shell zsh)"
+fi
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -150,10 +152,22 @@ fi
 # User configuration
 
 autoload -Uz compinit
-if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump) ]; then
-  compinit
+# Optimize compinit by only checking once a day
+# Use different stat syntax for macOS vs Linux
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  # macOS
+  if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null || echo 0) ]; then
+    compinit
+  else
+    compinit -C
+  fi
 else
-  compinit -C
+  # Linux
+  if [ $(date +'%j') != $(stat -c '%Y' ~/.zcompdump 2>/dev/null | xargs -I{} date -d @{} +'%j' 2>/dev/null || echo 0) ]; then
+    compinit
+  else
+    compinit -C
+  fi
 fi
 
 # The next line sets up the iterm2 shell integration for zsh

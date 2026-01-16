@@ -33,4 +33,4 @@ elif [ -f "$HOME/.op/plugins.sh" ]; then
   source "$HOME/.op/plugins.sh"
 fi
 
-. "$HOME/.cargo/env"
+# cargo env is already sourced conditionally in .path, no need to duplicate
