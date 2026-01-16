@@ -1,27 +1,45 @@
-# Pranay’s dotfiles
+# Pranay's dotfiles
+
+Cross-platform dotfiles that work seamlessly on both **macOS** and **Linux** (Ubuntu/Debian).
 
 ## Installation
 
-**Warning:** If you want to give these dotfiles a try, you should first fork this repository, review the code, and remove things you don’t want or need. Don’t blindly use my settings unless you know what that entails. Use at your own risk!
+**Warning:** If you want to give these dotfiles a try, you should first fork this repository, review the code, and remove things you don't want or need. Don't blindly use my settings unless you know what that entails. Use at your own risk!
+
+### Prerequisites
+
+**macOS:**
+- [Homebrew](https://brew.sh/) - Package manager for macOS
+- Run `./brew.sh` to install required tools (includes `fnm`)
+
+**Linux (Ubuntu/Debian):**
+- `git`, `curl`, `sudo` access
+- The `.linux` script will install all required tools automatically
+
+**Both platforms:**
+- The bootstrap script automatically installs [oh-my-zsh](https://ohmyz.sh/) with custom plugins
 
 ### Using Git and the bootstrap script
 
-You can clone the repository wherever you want. (I like to keep it in `~/github/dotfiles`) The bootstrapper script will pull in the latest version and copy the files to your home folder.
+You can clone the repository wherever you want. (I like to keep it in `~/github/dotfiles`) The bootstrapper script will:
+- Copy dotfiles to your home folder
+- Install oh-my-zsh with custom plugins
+- Run platform-specific setup (`.linux` on Linux, or use `brew.sh` on macOS)
 
 ```bash
-git clone https://github.com/pranaygp/dotfiles.git && cd dotfiles && source ./bootstrap.sh
+git clone https://github.com/pranaygp/dotfiles.git && cd dotfiles && ./bootstrap.sh
 ```
 
-To update, `cd` into your local `dotfiles` repository and then:
+The bootstrap script will prompt for confirmation. To skip the prompt, use the `--force` flag:
 
 ```bash
-source ./bootstrap.sh
+./bootstrap.sh --force
 ```
 
-Alternatively, to update while avoiding the confirmation prompt:
+To update, `cd` into your local `dotfiles` repository and run:
 
 ```bash
-set -- -f; source  ./bootstrap.sh
+./bootstrap.sh --force
 ```
 
 ### Git-free install
@@ -67,7 +85,11 @@ export OTHER_SECRET="..."
 
 You could also use `~/.extra` to override settings, functions and aliases from my dotfiles repository. It’s probably better to [fork this repository](https://github.com/pranaygp/dotfiles/fork) instead, though.
 
-### Sensible macOS defaults
+### Platform-Specific Setup
+
+#### macOS
+
+**Sensible macOS defaults:**
 
 When setting up a new Mac, you may want to set some sensible macOS defaults:
 
@@ -75,15 +97,54 @@ When setting up a new Mac, you may want to set some sensible macOS defaults:
 ./.macos
 ```
 
-### Install Homebrew formulae
+**Install Homebrew formulae:**
 
-When setting up a new Mac, you may want to install some common [Homebrew](https://brew.sh/) formulae (after installing Homebrew, of course):
+When setting up a new Mac, install common [Homebrew](https://brew.sh/) formulae (after installing Homebrew, of course):
 
 ```bash
 ./brew.sh
 ```
 
-Some of the functionality of these dotfiles depends on formulae installed by `brew.sh`. If you don’t plan to run `brew.sh`, you should look carefully through the script and manually install any particularly important ones. A good example is Bash/Git completion: the dotfiles use a special version from Homebrew.
+This installs essential tools like `fnm`, `neovim`, `git`, `gh`, `lazygit`, `ripgrep`, `fzf`, `bat`, `starship`, and many more.
+
+Some of the functionality of these dotfiles depends on formulae installed by `brew.sh`. If you don't plan to run `brew.sh`, you should look carefully through the script and manually install any particularly important ones.
+
+#### Linux (Ubuntu/Debian)
+
+**Automated Linux setup:**
+
+The bootstrap script automatically runs the `.linux` setup script on Linux systems. You can also run it manually:
+
+```bash
+./.linux
+```
+
+This installs a comprehensive development environment including:
+
+**Editors & Version Control:**
+- Neovim 0.11.5+ (from GitHub releases, required for LazyVim)
+- Git, GitHub CLI (`gh`), lazygit, git-delta, git-lfs
+
+**Shell & Terminal:**
+- Zsh, oh-my-zsh with custom plugins
+- Starship prompt
+- tmux, screen, htop
+
+**Development Tools:**
+- fnm (Fast Node Manager)
+- ripgrep, fd, fzf, tree, zoxide
+- bat, jq, httpie, ast-grep
+
+**Media Processing:**
+- ffmpeg, imagemagick, gifsicle, pngcrush
+
+**Other Tools:**
+- 1Password CLI, nmap, speedtest-cli, git-lfs, zstd
+
+**Important notes:**
+- Neovim is installed from GitHub releases (v0.11.5) instead of apt, because LazyVim requires v0.11.2+
+- On Ubuntu, `fd` and `bat` are symlinked from `/usr/bin/fdfind` and `/usr/bin/batcat` to `~/.local/bin/`
+- Make sure `~/.local/bin` is in your PATH (handled automatically by `.path`)
 
 ## Feedback
 

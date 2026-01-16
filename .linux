@@ -74,6 +74,15 @@ sudo apt-get install -y \
 # Install database and service tools (optional - commented out by default)
 # sudo apt-get install -y postgresql redis-server
 
+# Install fnm (Fast Node Manager)
+echo "Installing fnm..."
+if ! command -v fnm &> /dev/null; then
+  curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
+  # Add to PATH immediately for current session
+  export PATH="$HOME/.local/share/fnm:$PATH"
+  eval "$(fnm env 2>/dev/null || true)"
+fi
+
 # Install zoxide (modern cd replacement)
 echo "Installing zoxide..."
 if ! command -v zoxide &> /dev/null; then
@@ -171,7 +180,7 @@ echo "  - Search/Navigation: ripgrep, fd, fzf, tree, zoxide"
 echo "  - Terminal: tmux, screen, htop, starship"
 echo "  - File utilities: bat, jq"
 echo "  - Media: ffmpeg, imagemagick, gifsicle, pngcrush"
-echo "  - Development: ast-grep, httpie"
+echo "  - Development: ast-grep, httpie, fnm"
 echo "  - Network: nmap, speedtest-cli"
 echo "  - Other: 1password-cli, zstd"
 echo ""

@@ -124,7 +124,10 @@ zle -N zle-keymap-select
 # # Automatically load .nvmrc when found in a directory
 # zstyle ':omz:plugins:nvm' autoload yes
 
-# fnm setup (check if fnm exists first)
+# fnm setup - add to PATH first, then initialize if available
+if [ -d "$HOME/.local/share/fnm" ]; then
+  export PATH="$HOME/.local/share/fnm:$PATH"
+fi
 if command -v fnm &> /dev/null; then
   eval "$(fnm env --use-on-cd --shell zsh)"
 fi
