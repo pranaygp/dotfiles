@@ -33,13 +33,24 @@ sudo apt-get install -y \
 # Install development tools and languages
 echo "Installing development tools..."
 sudo apt-get install -y \
-  neovim \
   jq \
   ripgrep \
   fzf \
   bat \
   fd-find \
   httpie
+
+# Install latest neovim from GitHub releases (apt version is too old)
+echo "Installing latest neovim..."
+if ! command -v nvim &> /dev/null || [[ $(nvim --version | head -1 | grep -oP 'v\K[0-9]+\.[0-9]+' | head -1) < "0.10" ]]; then
+  NVIM_VERSION="0.10.3"
+  curl -sLo /tmp/nvim.tar.gz "https://github.com/neovim/neovim/releases/download/v${NVIM_VERSION}/nvim-linux64.tar.gz"
+  sudo rm -rf /opt/nvim
+  sudo tar -C /opt -xzf /tmp/nvim.tar.gz
+  sudo mv /opt/nvim-linux64 /opt/nvim
+  sudo ln -sf /opt/nvim/bin/nvim /usr/local/bin/nvim
+  rm /tmp/nvim.tar.gz
+fi
 
 # Create symlinks for fd and bat (they have different names on Ubuntu)
 mkdir -p $HOME/.local/bin

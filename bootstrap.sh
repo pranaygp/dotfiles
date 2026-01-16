@@ -18,20 +18,25 @@ git submodule update --init --recursive
 git submodule update --recursive
 
 function doIt() {
-  # check if fnm is installed
-  if ! command -v "fnm" &>/dev/null; then
-    echo "fnm does not exist or is not executable."
-    echo "Install fnm first - https://github.com/Schniz/fnm"
-    echo "Or run the brew.sh script first on mac to install it via homebrew"
-    exit 1
+  # check if fnm is installed (required on macOS, optional on Linux)
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    # macOS requires fnm (installed via homebrew)
+    if ! command -v "fnm" &>/dev/null; then
+      echo "fnm does not exist or is not executable."
+      echo "Install fnm first - https://github.com/Schniz/fnm"
+      echo "Or run the brew.sh script first on mac to install it via homebrew"
+      exit 1
+    fi
+  else
+    # On Linux, try to find fnm in common locations, but don't fail if not found
+    if ! command -v "fnm" &>/dev/null; then
+      # Try to add fnm to PATH if it exists in common locations
+      if [ -d "$HOME/.local/share/fnm" ]; then
+        export PATH="$HOME/.local/share/fnm:$PATH"
+        eval "$(fnm env 2>/dev/null || true)"
+      fi
+    fi
   fi
-  
-  # if [ ! -d "${HOME}/.nvm/.git" ]; then
-  #   echo "Make sure to install nvm first"
-  #   echo "You may use this command in a zsh shell - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash"
-  #   echo "Or check the nvm repo for the latest instructions"
-  #   exit 1
-  # fi
 
   rsync --exclude ".git/" \
     --exclude "init/" \
