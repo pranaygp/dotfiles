@@ -15,7 +15,8 @@ sort = -committerdate
 [core]
 
 # make sure Code/Cursor and the `code` shell command are installed
-editor = code --wait --new-window
+#editor = code --wait --new-window
+# dec 22 2025: change to nvim
 
 # use git-delta as pager
 pager = delta

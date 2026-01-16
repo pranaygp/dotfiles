@@ -333,3 +333,218 @@ function ghcd() {
     cd "$HOME/github/$repo"
   fi
 }
+
+# ==============================================================================
+# Git Worktree Management Functions
+# ==============================================================================
+
+# Helper: Get the main repo root (works from worktree or subdirectory)
+function _wt_get_main_repo() {
+  # --git-common-dir gives us the shared .git directory (main repo's .git)
+  # --path-format=absolute ensures we get absolute path
+  local git_common=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+  if [[ -z "$git_common" ]]; then
+    echo "Error: Not in a git repository" >&2
+    return 1
+  fi
+  # Parent of .git is the repo root
+  dirname "$git_common"
+}
+
+# Helper: Validate we're in ~/github/{org}/{repo} structure
+function _wt_validate_github_dir() {
+  local main_repo=$(_wt_get_main_repo)
+  if [[ -z "$main_repo" ]]; then
+    return 1
+  fi
+
+  if [[ "$main_repo" != "$HOME/github/"* ]]; then
+    echo "Error: Not in ~/github/{org}/{repo} structure" >&2
+    return 1
+  fi
+  echo "$main_repo"
+}
+
+# Helper: Sanitize branch name for directory (feature/foo -> feature-foo)
+function _wt_sanitize_branch() {
+  echo "$1" | sed 's|/|-|g'
+}
+
+# Create a new worktree from an existing branch
+# Usage: wt [branch-name]
+function wt() {
+  local main_repo=$(_wt_validate_github_dir)
+  if [[ -z "$main_repo" ]]; then
+    return 1
+  fi
+
+  local branch="$1"
+
+  # If no branch provided, use fzf to select from remote branches
+  if [[ -z "$branch" ]]; then
+    echo "Fetching remote branches..."
+    git -C "$main_repo" fetch --all --prune 2>/dev/null
+
+    branch=$(git -C "$main_repo" branch -r | grep -v HEAD | sed 's|origin/||' | sed 's/^[[:space:]]*//' | fzf --prompt="Select branch: " --preview "git -C '$main_repo' log --oneline -10 origin/{}")
+
+    if [[ -z "$branch" ]]; then
+      echo "No branch selected"
+      return 1
+    fi
+  fi
+
+  local sanitized=$(_wt_sanitize_branch "$branch")
+  local worktree_path="${main_repo}-${sanitized}"
+
+  if [[ -d "$worktree_path" ]]; then
+    echo "Worktree already exists at $worktree_path"
+    cd "$worktree_path"
+    return 0
+  fi
+
+  # Create the worktree
+  echo "Creating worktree at $worktree_path for branch $branch..."
+  if git -C "$main_repo" worktree add "$worktree_path" "$branch" 2>/dev/null || \
+     git -C "$main_repo" worktree add "$worktree_path" -b "$branch" "origin/$branch" 2>/dev/null; then
+    cd "$worktree_path"
+    echo "Switched to worktree: $worktree_path"
+  else
+    echo "Error: Failed to create worktree" >&2
+    return 1
+  fi
+}
+
+# List all worktrees for the current repo
+# Usage: wtl
+function wtl() {
+  local main_repo=$(_wt_validate_github_dir)
+  if [[ -z "$main_repo" ]]; then
+    return 1
+  fi
+
+  git -C "$main_repo" worktree list
+}
+
+# Delete a worktree
+# Usage: wtd [worktree-path-or-branch]
+function wtd() {
+  local main_repo=$(_wt_validate_github_dir)
+  if [[ -z "$main_repo" ]]; then
+    return 1
+  fi
+
+  local worktree="$1"
+
+  # If no argument, use fzf to select
+  if [[ -z "$worktree" ]]; then
+    worktree=$(git -C "$main_repo" worktree list | grep -v "$main_repo " | awk '{print $1}' | fzf --prompt="Select worktree to delete: " --preview "cd {} && git status")
+
+    if [[ -z "$worktree" ]]; then
+      echo "No worktree selected"
+      return 1
+    fi
+  fi
+
+  # If it's a branch name, convert to path
+  if [[ ! -d "$worktree" ]]; then
+    local sanitized=$(_wt_sanitize_branch "$worktree")
+    worktree="${main_repo}-${sanitized}"
+  fi
+
+  if [[ ! -d "$worktree" ]]; then
+    echo "Error: Worktree not found: $worktree" >&2
+    return 1
+  fi
+
+  # Confirm deletion
+  echo -n "Delete worktree at $worktree? [y/N] "
+  read -r confirm
+  if [[ "$confirm" != [yY] ]]; then
+    echo "Cancelled"
+    return 0
+  fi
+
+  # If we're in the worktree we're deleting, cd to main repo first
+  if [[ "$(pwd)" == "$worktree"* ]]; then
+    cd "$main_repo"
+  fi
+
+  # Try normal remove, fall back to force if needed
+  if ! git -C "$main_repo" worktree remove "$worktree" 2>/dev/null; then
+    echo -n "Worktree has changes. Force delete? [y/N] "
+    read -r force_confirm
+    if [[ "$force_confirm" == [yY] ]]; then
+      git -C "$main_repo" worktree remove --force "$worktree"
+    else
+      echo "Cancelled"
+      return 1
+    fi
+  fi
+
+  echo "Worktree deleted"
+}
+
+# Navigate to a worktree using fuzzy search
+# Usage: wtcd
+function wtcd() {
+  local main_repo=$(_wt_validate_github_dir)
+  if [[ -z "$main_repo" ]]; then
+    return 1
+  fi
+
+  local worktree=$(git -C "$main_repo" worktree list | awk '{print $1}' | fzf --prompt="Select worktree: " --preview "cd {} && git status && echo '' && git log --oneline -5")
+
+  if [[ -n "$worktree" ]]; then
+    cd "$worktree"
+  fi
+}
+
+# Create a new worktree with a NEW branch
+# Usage: wtn <new-branch-name> [base-ref]
+function wtn() {
+  local main_repo=$(_wt_validate_github_dir)
+  if [[ -z "$main_repo" ]]; then
+    return 1
+  fi
+
+  local new_branch="$1"
+  local base_ref="$2"
+
+  if [[ -z "$new_branch" ]]; then
+    echo "Usage: wtn <new-branch-name> [base-ref]" >&2
+    return 1
+  fi
+
+  # Default base ref to origin/main or origin/master
+  if [[ -z "$base_ref" ]]; then
+    if git -C "$main_repo" rev-parse --verify origin/main &>/dev/null; then
+      base_ref="origin/main"
+    elif git -C "$main_repo" rev-parse --verify origin/master &>/dev/null; then
+      base_ref="origin/master"
+    else
+      echo "Error: Could not find origin/main or origin/master. Please specify base-ref." >&2
+      return 1
+    fi
+    # Fetch latest
+    echo "Fetching latest from remote..."
+    git -C "$main_repo" fetch origin
+  fi
+
+  local sanitized=$(_wt_sanitize_branch "$new_branch")
+  local worktree_path="${main_repo}-${sanitized}"
+
+  if [[ -d "$worktree_path" ]]; then
+    echo "Worktree already exists at $worktree_path"
+    cd "$worktree_path"
+    return 0
+  fi
+
+  echo "Creating worktree at $worktree_path with new branch $new_branch (based on $base_ref)..."
+  if git -C "$main_repo" worktree add -b "$new_branch" "$worktree_path" "$base_ref"; then
+    cd "$worktree_path"
+    echo "Switched to worktree: $worktree_path"
+  else
+    echo "Error: Failed to create worktree" >&2
+    return 1
+  fi
+}

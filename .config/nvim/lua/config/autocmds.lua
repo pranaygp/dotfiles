@@ -23,20 +23,35 @@ local function sync_colorscheme()
   local target_colorscheme = is_dark_mode() and "vercel" or "catppuccin-latte"
 
   if current_colorscheme ~= target_colorscheme then
-    vim.cmd.colorscheme(target_colorscheme)
+    -- Check if the colorscheme is available before applying it
+    local ok = pcall(vim.cmd.colorscheme, target_colorscheme)
+    if not ok then
+      -- Colorscheme not yet loaded, will be synced on next FocusGained
+      return
+    end
   end
 end
 
 -- Create autocommand group
 local group = vim.api.nvim_create_augroup("SystemAppearanceSync", { clear = true })
 
--- Sync colorscheme when Neovim gains focus
-vim.api.nvim_create_autocmd({ "FocusGained", "VimEnter" }, {
+-- Sync colorscheme when Neovim gains focus (but not on VimEnter to avoid race conditions)
+vim.api.nvim_create_autocmd("FocusGained", {
   group = group,
   callback = function()
     sync_colorscheme()
   end,
   desc = "Sync colorscheme with system appearance",
+})
+
+-- Sync colorscheme after lazy.nvim has loaded plugins
+vim.api.nvim_create_autocmd("User", {
+  pattern = "LazyDone",
+  group = group,
+  callback = function()
+    sync_colorscheme()
+  end,
+  desc = "Initial sync colorscheme with system appearance after plugins load",
 })
 
 -- Create user command to manually sync colorscheme
