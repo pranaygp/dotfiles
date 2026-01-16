@@ -40,14 +40,15 @@ sudo apt-get install -y \
   fd-find \
   httpie
 
-# Install latest neovim from GitHub releases (apt version is too old)
+# Install latest neovim from GitHub releases (apt version is too old, LazyVim requires 0.11.2+)
 echo "Installing latest neovim..."
-if ! command -v nvim &> /dev/null || [[ $(nvim --version | head -1 | grep -oP 'v\K[0-9]+\.[0-9]+' | head -1) < "0.10" ]]; then
-  NVIM_VERSION="0.10.3"
-  curl -sLo /tmp/nvim.tar.gz "https://github.com/neovim/neovim/releases/download/v${NVIM_VERSION}/nvim-linux64.tar.gz"
+if ! command -v nvim &> /dev/null || [[ $(nvim --version | head -1 | grep -oP 'v\K[0-9]+\.[0-9]+' | head -1) < "0.11" ]]; then
+  NVIM_VERSION="0.11.5"
+  curl -Lo /tmp/nvim.tar.gz "https://github.com/neovim/neovim/releases/download/v${NVIM_VERSION}/nvim-linux-x86_64.tar.gz"
   sudo rm -rf /opt/nvim
+  sudo mkdir -p /opt
   sudo tar -C /opt -xzf /tmp/nvim.tar.gz
-  sudo mv /opt/nvim-linux64 /opt/nvim
+  sudo mv /opt/nvim-linux-x86_64 /opt/nvim
   sudo ln -sf /opt/nvim/bin/nvim /usr/local/bin/nvim
   rm /tmp/nvim.tar.gz
 fi
