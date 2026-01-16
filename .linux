@@ -1,18 +1,167 @@
 #!/usr/bin/env bash
 
-# Function to check if zoxide is installed
-is_zoxide_installed() {
-  command -v zoxide >/dev/null 2>&1
-}
+set -e
 
-if ! is_zoxide_installed; then
-  echo "Zoxide is not installed. Proceeding with installation..."
+echo "Setting up Linux environment with tools similar to macOS setup..."
 
-  sudo apt install -y zoxide fzf bat
-  mkdir -p $HOME/.local/bin
-  ln -s /usr/bin/batcat $HOME/.local/bin/bat
+# Update package lists
+sudo apt-get update
 
-  echo "Zoxide installed successfully!"
-else
-  echo "Zoxide is already installed"
+# Install core utilities
+echo "Installing core utilities..."
+sudo apt-get install -y \
+  coreutils \
+  moreutils \
+  findutils \
+  sed \
+  wget \
+  curl \
+  gnupg \
+  zsh \
+  vim \
+  git \
+  grep \
+  openssh-client \
+  screen \
+  less \
+  tree \
+  htop \
+  tmux \
+  unzip \
+  build-essential
+
+# Install development tools and languages
+echo "Installing development tools..."
+sudo apt-get install -y \
+  neovim \
+  jq \
+  ripgrep \
+  fzf \
+  bat \
+  fd-find \
+  httpie
+
+# Create symlinks for fd and bat (they have different names on Ubuntu)
+mkdir -p $HOME/.local/bin
+if [ ! -e "$HOME/.local/bin/fd" ] && [ -e "/usr/bin/fdfind" ]; then
+  ln -s /usr/bin/fdfind $HOME/.local/bin/fd
 fi
+if [ ! -e "$HOME/.local/bin/bat" ] && [ -e "/usr/bin/batcat" ]; then
+  ln -s /usr/bin/batcat $HOME/.local/bin/bat
+fi
+
+# Install media tools
+echo "Installing media processing tools..."
+sudo apt-get install -y \
+  ffmpeg \
+  imagemagick \
+  gifsicle \
+  optipng \
+  pngcrush
+
+# Install database and service tools (optional - commented out by default)
+# sudo apt-get install -y postgresql redis-server
+
+# Install zoxide (modern cd replacement)
+echo "Installing zoxide..."
+if ! command -v zoxide &> /dev/null; then
+  curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+fi
+
+# Install starship prompt
+echo "Installing starship prompt..."
+if ! command -v starship &> /dev/null; then
+  curl -sS https://starship.rs/install.sh | sh -s -- -y
+fi
+
+# Install GitHub CLI
+echo "Installing GitHub CLI..."
+if ! command -v gh &> /dev/null; then
+  (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
+    && sudo mkdir -p -m 755 /etc/apt/keyrings \
+    && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+    && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && sudo apt update \
+    && sudo apt install gh -y
+fi
+
+# Install lazygit
+echo "Installing lazygit..."
+if ! command -v lazygit &> /dev/null; then
+  LAZYGIT_VERSION="0.44.1"
+  curl -sLo /tmp/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+  tar -C /tmp -xf /tmp/lazygit.tar.gz lazygit
+  sudo install /tmp/lazygit /usr/local/bin
+  rm -f /tmp/lazygit /tmp/lazygit.tar.gz
+fi
+
+# Install git-delta (better git diff)
+echo "Installing git-delta..."
+if ! command -v delta &> /dev/null; then
+  DELTA_VERSION="0.18.2"
+  curl -sLo /tmp/delta.tar.gz "https://github.com/dandavison/delta/releases/download/${DELTA_VERSION}/delta-${DELTA_VERSION}-x86_64-unknown-linux-gnu.tar.gz"
+  tar -C /tmp -xf /tmp/delta.tar.gz
+  sudo install "/tmp/delta-${DELTA_VERSION}-x86_64-unknown-linux-gnu/delta" /usr/local/bin/
+  rm -rf /tmp/delta.tar.gz "/tmp/delta-${DELTA_VERSION}-x86_64-unknown-linux-gnu"
+fi
+
+# Install ast-grep
+echo "Installing ast-grep..."
+if ! command -v ast-grep &> /dev/null; then
+  AST_GREP_VERSION="0.30.3"
+  curl -sLo /tmp/ast-grep.tar.gz "https://github.com/ast-grep/ast-grep/releases/download/${AST_GREP_VERSION}/ast-grep-x86_64-unknown-linux-gnu.tar.gz"
+  tar -C /tmp -xf /tmp/ast-grep.tar.gz
+  sudo install /tmp/ast-grep /usr/local/bin/
+  rm -rf /tmp/ast-grep.tar.gz /tmp/ast-grep
+fi
+
+# Install additional tools available via apt
+echo "Installing additional utilities..."
+sudo apt-get install -y \
+  nmap \
+  speedtest-cli \
+  git-lfs \
+  zstd
+
+# Initialize git-lfs
+git lfs install 2>/dev/null || true
+
+# Install 1Password CLI (if desired)
+echo "Installing 1Password CLI..."
+if ! command -v op &> /dev/null; then
+  curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+    sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | \
+    sudo tee /etc/apt/sources.list.d/1password.list
+  sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/
+  curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | \
+    sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol
+  sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22
+  curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+    sudo gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
+  sudo apt update && sudo apt install -y 1password-cli
+fi
+
+# Clean up
+sudo apt-get autoremove -y
+sudo apt-get clean
+
+echo ""
+echo "✓ Linux environment setup complete!"
+echo ""
+echo "Installed tools:"
+echo "  - Core utilities: coreutils, moreutils, findutils, wget, curl, gnupg"
+echo "  - Shells: zsh"
+echo "  - Editors: vim, neovim"
+echo "  - Version control: git, gh, lazygit, git-delta, git-lfs"
+echo "  - Search/Navigation: ripgrep, fd, fzf, tree, zoxide"
+echo "  - Terminal: tmux, screen, htop, starship"
+echo "  - File utilities: bat, jq"
+echo "  - Media: ffmpeg, imagemagick, gifsicle, pngcrush"
+echo "  - Development: ast-grep, httpie"
+echo "  - Network: nmap, speedtest-cli"
+echo "  - Other: 1password-cli, zstd"
+echo ""
+echo "Note: Make sure ~/.local/bin is in your PATH for fd and bat symlinks"
+echo "Run 'source ~/.zshrc' or open a new shell to use the new tools"
