@@ -1,3 +1,8 @@
+-- comment this line to enable the opencode plugin
+if true then
+  return {}
+end
+
 return {
   -- Configure which-key group
   {

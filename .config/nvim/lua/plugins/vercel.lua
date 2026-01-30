@@ -42,7 +42,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "vercel-black",
+      colorscheme = get_colorscheme(),
     },
   },
 }
