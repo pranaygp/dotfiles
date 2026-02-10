@@ -45,10 +45,7 @@ brew install git
 brew link --overwrite git
 brew install grep
 brew install openssh
-brew install openssl@1.1
 brew install screen
-brew install php
-brew install gmp
 brew install less # recommended for git-delta
 brew link --overwrite less
 brew install python@3.12
@@ -87,7 +84,6 @@ brew install tmux
 brew install tree
 brew install watchman
 brew install wifi-password
-brew install --HEAD jabley/wrk2/wrk2
 brew install zoxide
 brew install zstd
 
