@@ -365,6 +365,9 @@ function _wt_validate_github_dir() {
   echo "$main_repo"
 }
 
+# Worktree directory separator (repo--branch distinguishes from sibling repos like repo-name)
+_WT_SEP="--"
+
 # Helper: Sanitize branch name for directory (feature/foo -> feature-foo)
 function _wt_sanitize_branch() {
   echo "$1" | sed 's|/|-|g'
@@ -394,7 +397,7 @@ function wt() {
   fi
 
   local sanitized=$(_wt_sanitize_branch "$branch")
-  local worktree_path="${main_repo}-${sanitized}"
+  local worktree_path="${main_repo}${_WT_SEP}${sanitized}"
 
   if [[ -d "$worktree_path" ]]; then
     echo "Worktree already exists at $worktree_path"
@@ -448,7 +451,7 @@ function wtd() {
   # If it's a branch name, convert to path
   if [[ ! -d "$worktree" ]]; then
     local sanitized=$(_wt_sanitize_branch "$worktree")
-    worktree="${main_repo}-${sanitized}"
+    worktree="${main_repo}${_WT_SEP}${sanitized}"
   fi
 
   if [[ ! -d "$worktree" ]]; then
@@ -531,7 +534,7 @@ function wtn() {
   fi
 
   local sanitized=$(_wt_sanitize_branch "$new_branch")
-  local worktree_path="${main_repo}-${sanitized}"
+  local worktree_path="${main_repo}${_WT_SEP}${sanitized}"
 
   if [[ -d "$worktree_path" ]]; then
     echo "Worktree already exists at $worktree_path"
@@ -545,6 +548,115 @@ function wtn() {
     echo "Switched to worktree: $worktree_path"
   else
     echo "Error: Failed to create worktree" >&2
+    return 1
+  fi
+}
+
+# Review a PR: checks out the branch as a worktree and launches Claude to review
+# Usage: wtpr <pr-number-or-url>
+function wtpr() {
+  local pr_input="$1"
+  if [[ -z "$pr_input" ]]; then
+    echo "Usage: wtpr <pr-number> or wtpr <github-pr-url>" >&2
+    return 1
+  fi
+
+  local repo_flag=""
+  local pr_number=""
+  local org_repo=""
+
+  # Parse input: URL vs number
+  if [[ "$pr_input" =~ ^https?:// ]]; then
+    # Extract org/repo and PR number from URL
+    # https://github.com/vercel/workflow/pull/123
+    local url_path=$(echo "$pr_input" | sed -E 's#https?://github.com/##')
+    org_repo=$(echo "$url_path" | cut -d'/' -f1-2)
+    pr_number=$(echo "$url_path" | cut -d'/' -f4)
+    repo_flag="-R $org_repo"
+  else
+    pr_number="$pr_input"
+  fi
+
+  # Get PR branch info using gh
+  local pr_json=$(eval gh pr view $pr_number $repo_flag --json headRefName,title,number,url 2>/dev/null)
+  if [[ -z "$pr_json" ]]; then
+    echo "Error: Could not fetch PR #$pr_number" >&2
+    return 1
+  fi
+
+  local branch=$(echo "$pr_json" | jq -r '.headRefName')
+  local title=$(echo "$pr_json" | jq -r '.title')
+  local number=$(echo "$pr_json" | jq -r '.number')
+  local url=$(echo "$pr_json" | jq -r '.url')
+
+  echo "PR #$number: $title"
+  echo "Branch: $branch"
+
+  # If we got a URL but aren't in the right repo, cd there
+  if [[ -n "$repo_flag" ]]; then
+    local org=$(echo "$org_repo" | cut -d'/' -f1)
+    local repo=$(echo "$org_repo" | cut -d'/' -f2)
+    local repo_path="$HOME/github/$org/$repo"
+    if [[ ! -d "$repo_path" ]]; then
+      echo "Error: Repo not found at $repo_path. Clone it first with: ghc $org_repo" >&2
+      return 1
+    fi
+    cd "$repo_path"
+  fi
+
+  # Create worktree for the PR branch
+  wt "$branch"
+
+  # Launch Claude with review prompt
+  echo "Starting Claude review for PR #$number..."
+  cx "Review PR #$number ($url). The branch '$branch' is checked out locally in this directory. Do a thorough code review: deeply inspect all changed files, check the PR diff and any existing review comments on GitHub, and provide your review with inline comments on the PR."
+}
+
+# Clean up worktrees whose branches have been merged/deleted on remote
+# Usage: wtclean
+function wtclean() {
+  local main_repo=$(_wt_validate_github_dir)
+  if [[ -z "$main_repo" ]]; then return 1; fi
+
+  echo "Fetching latest remote state..."
+  git -C "$main_repo" fetch --prune
+
+  local cleaned=0
+  git -C "$main_repo" worktree list --porcelain | grep "^worktree " | sed 's/^worktree //' | while read wt_path; do
+    # Skip the main repo itself
+    [[ "$wt_path" == "$main_repo" ]] && continue
+
+    # Get the branch for this worktree
+    local wt_branch=$(git -C "$wt_path" rev-parse --abbrev-ref HEAD 2>/dev/null)
+    [[ -z "$wt_branch" || "$wt_branch" == "HEAD" ]] && continue
+
+    # Check if the branch still exists on remote
+    if ! git -C "$main_repo" rev-parse --verify "origin/$wt_branch" &>/dev/null; then
+      echo "  Stale: $wt_path (branch '$wt_branch' no longer on remote)"
+      echo -n "  Delete? [y/N] "
+      read -r confirm
+      if [[ "$confirm" == [yY] ]]; then
+        # Navigate away if we're in this worktree
+        [[ "$(pwd)" == "$wt_path"* ]] && cd "$main_repo"
+        git -C "$main_repo" worktree remove "$wt_path" 2>/dev/null || \
+          git -C "$main_repo" worktree remove --force "$wt_path"
+        echo "  Deleted."
+        cleaned=$((cleaned + 1))
+      fi
+    fi
+  done
+
+  echo "Cleaned up $cleaned worktree(s)."
+}
+
+# Quick check: warn if on main/master branch and suggest wtn
+function _wt_main_guard() {
+  local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+  if [[ "$branch" == "main" || "$branch" == "master" ]]; then
+    echo "\u26a0  You're on $branch. Create a worktree instead:"
+    echo "   wtn <branch-name>    # new branch"
+    echo "   wt <branch-name>     # existing branch"
+    echo "   wtpr <pr-number>     # review a PR"
     return 1
   fi
 }

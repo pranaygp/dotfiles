@@ -179,3 +179,7 @@ alias n="nvim"
 
 # claude code
 alias claudex="claude --dangerously-skip-permissions"
+alias cx="claude --dangerously-skip-permissions"
+
+# git commit guard: warn if on main/master and suggest worktree
+alias gc='_wt_main_guard && git commit'

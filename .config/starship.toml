@@ -19,8 +19,17 @@ when = """ [[ $PWD == "$HOME/github/"*/* ]] """
 command = '''
 relative="${PWD#$HOME/github/}"
 org=$(echo "$relative" | cut -d'/' -f1)
-repo=$(echo "$relative" | cut -d'/' -f2)
-printf '\e]8;;https://github.com/%s/%s\e\\%s/%s\e]8;;\e\\' "$org" "$repo" "$org" "$repo"
+full_repo=$(echo "$relative" | cut -d'/' -f2)
+
+# Detect worktree: repo--branch pattern
+if [[ "$full_repo" == *"--"* ]]; then
+  repo="${full_repo%%--*}"
+  branch="${full_repo#*--}"
+  printf '\e]8;;https://github.com/%s/%s\e\\%s/%s\e]8;;\e\\ \e[3m(%s)\e[0m' "$org" "$repo" "$org" "$repo" "$branch"
+else
+  repo="$full_repo"
+  printf '\e]8;;https://github.com/%s/%s\e\\%s/%s\e]8;;\e\\' "$org" "$repo" "$org" "$repo"
+fi
 '''
 format = '[github\([$output]($style bold underline)\)]($style italic)'
 style = "green"
