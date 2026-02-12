@@ -438,13 +438,19 @@ function wtd() {
 
   local worktree="$1"
 
-  # If no argument, use fzf to select
+  # If no argument: default to current dir if it's a non-main worktree, otherwise fzf
   if [[ -z "$worktree" ]]; then
-    worktree=$(git -C "$main_repo" worktree list | grep -v "$main_repo " | awk '{print $1}' | fzf --prompt="Select worktree to delete: " --preview "cd {} && git status")
+    if [[ "$(pwd)" != "$main_repo" && "$(pwd)" == "$main_repo"* ]] || \
+       [[ -f "$(pwd)/.git" ]]; then
+      # We're in a worktree (not the main repo) — use current directory
+      worktree="$(pwd)"
+    else
+      worktree=$(git -C "$main_repo" worktree list | grep -v "$main_repo " | awk '{print $1}' | fzf --prompt="Select worktree to delete: " --preview "cd {} && git status")
 
-    if [[ -z "$worktree" ]]; then
-      echo "No worktree selected"
-      return 1
+      if [[ -z "$worktree" ]]; then
+        echo "No worktree selected"
+        return 1
+      fi
     fi
   fi
 
