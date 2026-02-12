@@ -8,7 +8,7 @@ if [ "$1" = "--force" -o "$1" = "-f" -o "$CODESPACES" ]; then
 else
   echo "Would you like to run ./diff.sh first to diff changes from your home directory (y/n)?: "
   read choice
-  if [[ $reply =~ ^[Yy]$ ]]; then
+  if [[ $choice =~ ^[Yy]$ ]]; then
     ./diff.sh
   fi
 fi

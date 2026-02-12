@@ -2,6 +2,19 @@
 [init]
 	defaultBranch = main
 
+[alias]
+	st = status -sb
+	co = checkout
+	br = branch
+	ci = commit
+	unstage = reset HEAD --
+	last = log -1 HEAD
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	gone = !git branch -vv | grep ': gone]' | awk '{print $1}'
+	prune-gone = !git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D
+	wip = !git add -A && git commit -m 'WIP [skip ci]'
+	undo = reset --soft HEAD~1
+
 [apply]
 
 # Detect whitespace errors when applying a patch.
@@ -105,6 +118,10 @@ rebase = true
 	prune = true
 [commit]
 	gpgSign = true
+[rerere]
+	enabled = true
+	autoupdate = true
+
 [rebase]
 	instructionFormat = (%an <%ae>) %s
 

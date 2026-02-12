@@ -138,10 +138,9 @@ fi
 # Add wisely, as too many plugins slow down shell startup.
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
   # plugins=(git zoxide fzf nvm aws zsh-syntax-highlighting)
-  plugins=(git zoxide fzf aws zsh-syntax-highlighting)
+  plugins=(git zoxide fzf aws zsh-completions zsh-autosuggestions zsh-syntax-highlighting)
 else
-  # plugins=(git zoxide fzf aws nvm zsh-vi-mode zsh-syntax-highlighting)
-  plugins=(git zoxide fzf aws zsh-vi-mode zsh-syntax-highlighting)
+  plugins=(git zoxide fzf aws zsh-vi-mode zsh-completions zsh-autosuggestions zsh-syntax-highlighting)
 fi
 
 source $ZSH/oh-my-zsh.sh
@@ -154,27 +153,12 @@ fi
 
 # User configuration
 
-autoload -Uz compinit
-# Optimize compinit by only checking once a day
-# Use different stat syntax for macOS vs Linux
-if [[ "$(uname -s)" == "Darwin" ]]; then
-  # macOS
-  if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null || echo 0) ]; then
-    compinit
-  else
-    compinit -C
-  fi
-else
-  # Linux
-  if [ $(date +'%j') != $(stat -c '%Y' ~/.zcompdump 2>/dev/null | xargs -I{} date -d @{} +'%j' 2>/dev/null || echo 0) ]; then
-    compinit
-  else
-    compinit -C
-  fi
-fi
+# Note: compinit is handled by oh-my-zsh above, no need to call it again
 
-# The next line sets up the iterm2 shell integration for zsh
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+# Setup direnv if available
+if command -v direnv &>/dev/null; then
+  eval "$(direnv hook zsh)"
+fi
 
 
 # The next line updates PATH for the Google Cloud SDK.
@@ -190,7 +174,7 @@ fi
 
 
 # bun completions
-[ -s "/Users/pranaygp/.bun/_bun" ] && source "/Users/pranaygp/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # Graphite CLI completion
 #compdef gt

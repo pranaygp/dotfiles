@@ -87,5 +87,10 @@ brew install wifi-password
 brew install zoxide
 brew install zstd
 
+# Tools managed outside of brew.sh but needed by dotfiles
+brew install direnv
+brew install eza
+brew install fnm
+
 # Remove outdated versions from the cellar.
 brew cleanup

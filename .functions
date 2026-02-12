@@ -79,9 +79,7 @@ function dataurl() {
 function server() {
 	local port="${1:-8000}"
 	sleep 1 && open "http://localhost:${port}/" &
-	# Set the default Content-Type to `text/plain` instead of `application/octet-stream`
-	# And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
-	python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
+	python3 -m http.server "$port"
 }
 
 # Start a PHP server from a directory, optionally specifying the port
@@ -198,10 +196,10 @@ function httpstat() {
 
 # Print list of all branches that don't exist on the remote
 function localbranches() {
-	EXISTING=$(git branch -r | awk 'BEGIN { FS = "/" } ; { print $2 }')
-	for b in $(git branch | grep -v '*'); do
-		if [[ "$EXISTING" != *"$b"* ]]; then
-			echo $b
+	EXISTING=$(git branch -r | sed 's|.*origin/||')
+	for b in $(git branch --format='%(refname:short)'); do
+		if ! echo "$EXISTING" | grep -qx "$b"; then
+			echo "$b"
 		fi
 	done
 }
@@ -219,17 +217,19 @@ function awssecret() {
 	echo $JSON
 }
 
-function prunesqaushed() {
-	git checkout -q master
+function prunesquashed() {
+	local default_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+	default_branch="${default_branch:-main}"
+	git checkout -q "$default_branch"
 	git for-each-ref refs/heads/ "--format=%(refname:short)" |
 		while read branch; do
-			mergeBase=$(git merge-base master $branch)
-			tree=$(git rev-parse $branch^{tree})
-			newcommit=$(git commit-tree $tree -p $mergeBase -m _)
-			cherry=$(git cherry master $newcommit)
+			mergeBase=$(git merge-base "$default_branch" "$branch")
+			tree=$(git rev-parse "$branch"^{tree})
+			newcommit=$(git commit-tree "$tree" -p "$mergeBase" -m _)
+			cherry=$(git cherry "$default_branch" "$newcommit")
 			if [[ $cherry == "-"* ]]; then
-				echo "$branch is merged into master and will be deleted"
-				git branch -D $branch
+				echo "$branch is merged into $default_branch and will be deleted"
+				git branch -D "$branch"
 			fi
 		done
 }
@@ -291,6 +291,15 @@ function splitcsv() {
 	for i in $(find ${base}_*); do mv $i "$i.csv"; done
 	for i in $(find . -type f -name "${base}_*.csv" -not -name "${base}_00.csv");
 		do echo -e "$(head -1 ${base}_00.csv)\n$(cat $i)" > $i; done
+}
+
+# Fuzzy find a file and open in neovim
+function fvim() {
+  if [[ $# -eq 0 ]]; then
+    fd -t f | fzf --header "Open File in Neovim" --preview "bat --color=always {}" | xargs nvim
+  else
+    fd -t f | fzf --header "Open File in Neovim" --preview "bat --color=always {}" -q "$@" | xargs nvim
+  fi
 }
 
 # Clone a repo in the ~/github/{org}/{repo} format

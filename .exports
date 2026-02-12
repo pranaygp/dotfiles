@@ -12,7 +12,7 @@ export EDITOR='nvim'
 # fi
 
 # ssh
-export SSH_KEY_PATH="~/.ssh/id_rsa"
+export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
 
 # Enable persistent REPL history for `node`.
 export NODE_REPL_HISTORY=~/.node_history
@@ -30,15 +30,15 @@ export PYTHONIOENCODING='UTF-8'
 # Increase Bash history size. Allow 32³ entries; the default is 500.
 export HISTSIZE='32768'
 export HISTFILESIZE="${HISTSIZE}"
-# Omit duplicates and commands that begin with a space from history.
-export HISTCONTROL='ignoreboth'
+# Omit duplicates and commands that begin with a space from history (zsh equivalent).
+setopt HIST_IGNORE_DUPS HIST_IGNORE_SPACE
 
 # Prefer US English and use UTF-8.
 export LANG='en_US.UTF-8'
 export LC_ALL='en_US.UTF-8'
 
 # Highlight section titles in manual pages.
-export LESS_TERMCAP_md="${yellow}"
+export LESS_TERMCAP_md=$'\e[1;33m'
 
 # Don’t clear the screen after quitting a manual page.
 export MANPAGER='less -X'
@@ -51,8 +51,10 @@ export GPG_TTY=$(tty)
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
 # To compile librdkafka for node-rdkafka
-export CPPFLAGS=-I/usr/local/opt/openssl/include
-export LDFLAGS=-L/usr/local/opt/openssl/lib
+if [[ -n "$HOMEBREW_PREFIX" ]]; then
+  export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openssl/include"
+  export LDFLAGS="-L$HOMEBREW_PREFIX/opt/openssl/lib"
+fi
 
 # For electron code signing
 export CSC_IDENTITY_AUTO_DISCOVERY=false
@@ -65,9 +67,11 @@ export LESS="-iMSx4 -RSFX -e"
 # Disabled this - it breaks NextJS builds
 # export NODE_ENV="development"
 
-# Fix for terraform AWS provider bug on M1 - https://github.com/hashicorp/terraform-provider-aws/issues/20274#issuecomment-996795241
-export GODEBUG=asyncpreemptoff=1
 
 # For FZF
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --border --info=inline --bind=ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up'
 export FZF_PREVIEW_ADVANCED=true
 export FZF_PREVIEW_WINDOW='right:65%:nohidden'

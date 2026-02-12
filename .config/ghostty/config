@@ -2,5 +2,9 @@ theme = dark:Vercel,light:Catppuccin Latte
 background = #000000
 font-family = GeistMono Nerd Font Mono
 font-size = 14
+macos-option-as-alt = true
+clipboard-read = allow
+clipboard-write = allow
+confirm-close-surface = false
 keybind = global:alt+space=toggle_quick_terminal
 keybind = shift+enter=text:\x1b\r

@@ -1,21 +1,8 @@
--- Function to detect macOS system appearance
-local function is_dark_mode()
-  local handle = io.popen("defaults read -g AppleInterfaceStyle 2>/dev/null")
-  if handle then
-    local result = handle:read("*a")
-    handle:close()
-    return result:match("Dark") ~= nil
-  end
-  return true -- default to dark mode if detection fails
-end
+local utils = require("config.utils")
 
 -- Set initial colorscheme based on system appearance
 local function get_colorscheme()
-  if is_dark_mode() then
-    return "vercel"
-  else
-    return "catppuccin-latte"
-  end
+  return utils.is_dark_mode() and "vercel" or "catppuccin-latte"
 end
 
 return {
