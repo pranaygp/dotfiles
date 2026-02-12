@@ -622,7 +622,7 @@ function wtclean() {
   git -C "$main_repo" fetch --prune
 
   local cleaned=0
-  git -C "$main_repo" worktree list --porcelain | grep "^worktree " | sed 's/^worktree //' | while read wt_path; do
+  while read wt_path; do
     # Skip the main repo itself
     [[ "$wt_path" == "$main_repo" ]] && continue
 
@@ -634,7 +634,7 @@ function wtclean() {
     if ! git -C "$main_repo" rev-parse --verify "origin/$wt_branch" &>/dev/null; then
       echo "  Stale: $wt_path (branch '$wt_branch' no longer on remote)"
       echo -n "  Delete? [y/N] "
-      read -r confirm
+      read -r confirm </dev/tty
       if [[ "$confirm" == [yY] ]]; then
         # Navigate away if we're in this worktree
         [[ "$(pwd)" == "$wt_path"* ]] && cd "$main_repo"
@@ -644,7 +644,7 @@ function wtclean() {
         cleaned=$((cleaned + 1))
       fi
     fi
-  done
+  done < <(git -C "$main_repo" worktree list --porcelain | grep "^worktree " | sed 's/^worktree //')
 
   echo "Cleaned up $cleaned worktree(s)."
 }
