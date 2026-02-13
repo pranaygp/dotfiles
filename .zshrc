@@ -52,20 +52,11 @@ function zvm_after_init() {
   eval "$(starship init zsh)"
 }
 
-# fnm setup - add to PATH, but lazy-load the full init until first use
+# fnm setup (~3ms, not worth lazy-loading)
 if [ -d "$HOME/.local/share/fnm" ]; then
   export PATH="$HOME/.local/share/fnm:$PATH"
+  eval "$(fnm env --use-on-cd --shell zsh)"
 fi
-_fnm_lazy_init() {
-  unfunction node npm npx pnpm yarn 2>/dev/null
-  if command -v fnm &>/dev/null; then
-    eval "$(fnm env --use-on-cd --shell zsh)"
-  fi
-}
-for _cmd in node npm npx pnpm yarn; do
-  eval "${_cmd}() { _fnm_lazy_init; ${_cmd} \"\$@\" }"
-done
-unset _cmd
 
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
   plugins=(git zoxide fzf aws zsh-completions zsh-autosuggestions zsh-syntax-highlighting)
