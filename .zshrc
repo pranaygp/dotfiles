@@ -1,74 +1,35 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH.
 fpath=(~/.zsh/completion $fpath)
 
-# if type brew &>/dev/null; then
-#   FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
-# fi
-
 # Setup homebrew path. Needs to be done early ahead of .path
+# Inlined from `brew shellenv` to avoid forking on every shell start
 if [ -x /opt/homebrew/bin/brew ]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+  export HOMEBREW_PREFIX="/opt/homebrew"
+  export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+  export HOMEBREW_REPOSITORY="/opt/homebrew"
+  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
+  export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
+  export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
 elif [ -x /usr/local/bin/brew ]; then
-  eval "$(/usr/local/bin/brew shellenv)"
+  export HOMEBREW_PREFIX="/usr/local"
+  export HOMEBREW_CELLAR="/usr/local/Cellar"
+  export HOMEBREW_REPOSITORY="/usr/local/Homebrew"
+  export PATH="/usr/local/bin:/usr/local/sbin${PATH+:$PATH}"
+  export MANPATH="/usr/local/share/man${MANPATH+:$MANPATH}:"
+  export INFOPATH="/usr/local/share/info:${INFOPATH:-}"
 fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-
-# Set name of the theme to load. Optionally, if you set this to "random"
-# it'll load a random theme each time that oh-my-zsh is loaded.
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-# Disabled to use starship prompt instead
 ZSH_THEME=""
-
-# Set list of themes to load
-# Setting this variable when ZSH_THEME=random
-# cause zsh load theme from this variable instead of
-# looking in ~/.oh-my-zsh/themes/
-# An empty array have no effect
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion. Case
-# sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true" # Should be done via dotfiles submodule
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
 DISABLE_AUTO_TITLE="true"
-function precmd() {
-  echo -ne "\e]0;${PWD##*/}\a"
-}
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
+# Set terminal title to current directory name
+autoload -Uz add-zsh-hook
+_set_terminal_title() {
+  echo -ne "\e]0;${PWD##*/}\a"
+}
+add-zsh-hook precmd _set_terminal_title
 
 # This is run by zsh-vim-mode to reset the old history search
 function zvm_before_init() {
@@ -86,58 +47,27 @@ function zvm_config() {
   # ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
 }
 
-function zle-line-init zle-keymap-select {
-  RPS1="${${KEYMAP/vicmd/-- NORMAL --}/(main|viins)/-- INSERT --}"
-  RPS2=$RPS1
-  zle reset-prompt
-}
-
 # Initialize starship AFTER zsh-vi-mode
 function zvm_after_init() {
   eval "$(starship init zsh)"
 }
 
-zle -N zle-line-init
-zle -N zle-keymap-select
-
-# Configuration for the zsh omz plugin
-# https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nvm
-# if type brew &>/dev/null; then
-#   NVM_HOMEBREW=$(brew --prefix nvm)
-# fi
-
-# Disabled nvm setup since we use fnm now (installed later)
-# Lazy load NVM when any node based executable is run
-# declare -a NODE_GLOBALS=(
-#   $(
-#     find ~/.nvm/versions/node -maxdepth 3 -type l -wholename '*/bin/*' \
-#       ! -name 'node' \
-#       ! -name 'npm' \
-#       ! -name 'npx' \
-#       ! -name 'pnpm' \
-#       ! -name 'yarn' |
-#       xargs -n1 basename | sort | uniq
-#   )
-# )
-# zstyle ':omz:plugins:nvm' lazy yes
-# zstyle ':omz:plugins:nvm' lazy-cmd "${NODE_GLOBALS[@]}"
-# # Automatically load .nvmrc when found in a directory
-# zstyle ':omz:plugins:nvm' autoload yes
-
-# fnm setup - add to PATH first, then initialize if available
+# fnm setup - add to PATH, but lazy-load the full init until first use
 if [ -d "$HOME/.local/share/fnm" ]; then
   export PATH="$HOME/.local/share/fnm:$PATH"
 fi
-if command -v fnm &> /dev/null; then
-  eval "$(fnm env --use-on-cd --shell zsh)"
-fi
+_fnm_lazy_init() {
+  unfunction node npm npx pnpm yarn 2>/dev/null
+  if command -v fnm &>/dev/null; then
+    eval "$(fnm env --use-on-cd --shell zsh)"
+  fi
+}
+for _cmd in node npm npx pnpm yarn; do
+  eval "${_cmd}() { _fnm_lazy_init; ${_cmd} \"\$@\" }"
+done
+unset _cmd
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-  # plugins=(git zoxide fzf nvm aws zsh-syntax-highlighting)
   plugins=(git zoxide fzf aws zsh-completions zsh-autosuggestions zsh-syntax-highlighting)
 else
   plugins=(git zoxide fzf aws zsh-vi-mode zsh-completions zsh-autosuggestions zsh-syntax-highlighting)

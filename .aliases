@@ -121,11 +121,6 @@ alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/C
 # find . -name .gitattributes | map dirname
 alias map="xargs -n1"
 
-# One of @janmoesen’s ProTip™s
-for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
-	alias "${method}"="lwp-request -m '${method}'"
-done
-
 # Stuff I never really use but cannot delete either because of http://xkcd.com/530/
 alias stfu="osascript -e 'set volume output muted true'"
 alias pumpitup="osascript -e 'set volume output volume 100'"
@@ -135,7 +130,7 @@ alias pumpitup="osascript -e 'set volume output volume 100'"
 alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
 
 # Lock the screen (when going AFK)
-alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+alias afk="pmset displaysleepnow"
 
 # Reload the shell (i.e. invoke as a login shell)
 alias reload="exec ${SHELL} -l"
@@ -146,16 +141,7 @@ alias path='echo -e ${PATH//:/\\n}'
 # Additional useful aliases that i've setup over the years
 alias headers='curl -I -X GET'
 alias bim='vim'
-alias start_clipper='ssh -f -N dev-clipper; clipper'
 alias dus='du -sch .[!.]* * |sort -h'
-
-# alias to wrap node with nq
-alias q="NQDIR=/tmp/nq_main nq"
-alias qtail="NQDIR=/tmp/nq_main nqtail"
-alias qterm="NQDIR=/tmp/nq_main nqterm"
-
-# alias for snowsql
-alias snowsql="/Applications/SnowSQL.app/Contents/MacOS/snowsql"
 
 # alias for using fzf with bat preview
 alias fb="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"

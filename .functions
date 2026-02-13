@@ -82,15 +82,6 @@ function server() {
 	python3 -m http.server "$port"
 }
 
-# Start a PHP server from a directory, optionally specifying the port
-# (Requires PHP 5.4.0+.)
-function phpserver() {
-	local port="${1:-4000}"
-	local ip=$(ipconfig getifaddr en1)
-	sleep 1 && open "http://${ip}:${port}/" &
-	php -S "${ip}:${port}"
-}
-
 # Compare original and gzipped file size
 function gz() {
 	local origsize=$(wc -c <"$1")
@@ -176,15 +167,6 @@ function mpng() {
 	mv "$1"{.,}
 }
 
-# klogs, but with timestamps converted to Pacific Time
-function lklogs() {
-	klogs "$@" | while read line; do
-		date=$(echo $line | awk '{print $2}')
-		tdate=$(TZ='America/Los_Angeles' date --date="$date")
-		echo $line | awk -vt="$tdate" '{print $1 " " t " " substr($0, index($0,$3))}'
-	done
-}
-
 # Generate a random mac address and change the local mac address to that
 function spoof-mac() {
 	sudo ifconfig en0 ether $(openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//')
@@ -234,18 +216,6 @@ function prunesquashed() {
 		done
 }
 
-function creategif() {
-	filename="${1%.*}"
-	ffmpeg \
-		-t 4 \
-		-i $1 \
-		-i ~/Documents/Windsor/assets/play_icon.png \
-		-filter_complex "[1:v]scale=300:300,format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[ovrl];[0:v][ovrl]overlay=(main_w-overlay_w)/2:(main_h-overlay_h)/2,fps=10,scale=380:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" \
-		-loop 0 \
-		-y \
-		"$filename.gif"
-}
-
 function timezsh() {
 	shell=${1-$SHELL}
 	for i in $(seq 1 10); do /usr/bin/time $shell -i -c exit; done
@@ -271,7 +241,7 @@ function speedgif() {
 
 	# Get the number of frames
 	osname="$(uname -s)"
-	if [[ $osname -eq "Darwin" ]]; then
+	if [[ $osname == "Darwin" ]]; then
 		numframes=$(gifsicle $unoptimized -I | head -n 1 | awk '{print $3}')
 	else
 		numframes=$(gifsicle $unoptimized -I | grep -P "\d+ images" --only-matching | grep -P "\d+" --only-matching)

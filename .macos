@@ -13,8 +13,6 @@
 # settings we're about to change
 osascript -e 'tell application "System Settings" to quit'
 
-sudo chmod 755 ~/Library/Preferences/
-
 # Ask for the administrator password upfront
 sudo -v
 
@@ -456,13 +454,13 @@ fi
 # defaults write com.apple.dock wvous-tl-modifier -int 0
 # Top right screen corner → no-op
 defaults write com.apple.dock wvous-tr-corner -int 12
-defaults write com.apple.dock wvous-tr-modifier -int 12
+defaults write com.apple.dock wvous-tr-modifier -int 0
 # Bottom left screen corner → no-op
 # defaults write com.apple.dock wvous-bl-corner -int 0
 # defaults write com.apple.dock wvous-bl-modifier -int 0
 # Bottom right screen corner → no-op
 defaults write com.apple.dock wvous-br-corner -int 14
-defaults write com.apple.dock wvous-br-modifier -int 14
+defaults write com.apple.dock wvous-br-modifier -int 0
 
 ###############################################################################
 # Safari & WebKit                                                             #

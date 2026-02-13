@@ -46,6 +46,8 @@ function doIt() {
     --exclude "README.md" \
     --exclude "LICENSE.txt" \
     --exclude "brew.sh" \
+    --exclude ".claude/settings.local.json" \
+    --exclude ".config/gh/hosts.yml" \
     -avh --no-perms --update --times . ~
 
   if [[ "$(uname -s)" == "Linux" ]]; then

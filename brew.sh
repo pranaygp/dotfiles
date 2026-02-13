@@ -67,7 +67,7 @@ brew install htop
 brew install httpie
 brew install imagemagick
 brew install jq
-brew install kafkacat
+brew install kcat
 brew install lazygit
 brew install librdkafka
 brew install mosh

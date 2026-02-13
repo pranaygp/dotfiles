@@ -19,5 +19,8 @@ Thumbs.db
 # And I create .extra folders all the time for personal stuff in git repos
 .extra
 
+# Vim auto-generated files
+.netrwhist
+
 # Claude creates these files automatically
 **/.claude/settings.local.json
