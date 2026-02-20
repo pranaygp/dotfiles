@@ -80,6 +80,7 @@ brew install redis
 brew install ripgrep
 brew install speedtest
 brew install starship
+brew install tailscale
 brew install tmux
 brew install tree
 brew install watchman
