@@ -167,7 +167,7 @@ alias claudex="claude --dangerously-skip-permissions"
 alias cx="claude --dangerously-skip-permissions"
 
 # codex cli
-alias cox="codex --full-auto --dangerously-bypass-approvals-and-sandbox"
+alias cox="codex --dangerously-bypass-approvals-and-sandbox"
 
 # git commit/push guards: warn if on main/master and suggest worktree
 alias gc='_wt_main_guard && git commit'
