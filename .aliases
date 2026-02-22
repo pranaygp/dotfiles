@@ -11,6 +11,7 @@ alias -- -="cd -"
 # Shortcuts
 alias g="cd ~/github"
 alias v="cd ~/github/vercel"
+alias pgp="cd ~/github/pranaygp"
 alias dl="cd ~/Downloads"
 alias dt="cd ~/Desktop"
 
@@ -163,6 +164,9 @@ alias n="nvim"
 # claude code
 alias claudex="claude --dangerously-skip-permissions"
 alias cx="claude --dangerously-skip-permissions"
+
+# codex cli
+alias cox="codex --full-auto"
 
 # git commit/push guards: warn if on main/master and suggest worktree
 alias gc='_wt_main_guard && git commit'

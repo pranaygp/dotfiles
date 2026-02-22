@@ -6,16 +6,16 @@
 
 add_newline = false
 
-format = '$custom$directory$character'
-right_format = '$all'
+format = '${custom.github_repo_base}${custom.worktree_branch}$directory$character'
+right_format = '$cmd_duration$git_branch$git_status'
 
-# [character]
-# success_symbol = "[➜](bold green)"
-# error_symbol = "[➜](bold red)"
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
 
-# Custom module to show org/repo for github paths
+# Custom module to show org/repo for github paths (left side)
 [custom.github_repo_base]
-when = """ [[ $PWD == "$HOME/github/"*/* ]] """
+when = """ [[ $PWD == "$HOME/github/"*/* ]] && git rev-parse --is-inside-work-tree >/dev/null 2>&1 """
 command = '''
 relative="${PWD#$HOME/github/}"
 org=$(echo "$relative" | cut -d'/' -f1)
@@ -24,70 +24,54 @@ full_repo=$(echo "$relative" | cut -d'/' -f2)
 # Detect worktree: repo--branch pattern
 if [[ "$full_repo" == *"--"* ]]; then
   repo="${full_repo%%--*}"
-  branch="${full_repo#*--}"
-  printf '\e]8;;https://github.com/%s/%s\e\\%s/%s\e]8;;\e\\ \e[3m(%s)\e[0m' "$org" "$repo" "$org" "$repo" "$branch"
+  printf '%s/%s' "$org" "$repo"
 else
-  repo="$full_repo"
-  printf '\e]8;;https://github.com/%s/%s\e\\%s/%s\e]8;;\e\\' "$org" "$repo" "$org" "$repo"
+  printf '%s/%s' "$org" "$full_repo"
 fi
 '''
-format = '[github\([$output]($style bold underline)\)]($style italic)'
+format = '[github\([$output]($style bold underline)\)]($style italic) '
 style = "green"
 
-# [custom.github_repo_subpath]
-# when = """ [[ $PWD == "$HOME/github/"*/*/* ]] """
-# command = """
-# if [[ $PWD == "$HOME/github/"* ]]; then
-#   relative="${PWD#$HOME/github/}"
-#   subpath=$(echo "$relative" | cut -d'/' -f3-)
-#   if [[ -n "$subpath" ]]; then
-#     echo "/$subpath"
-#   fi
-# fi
-# """
-# style = "bright-cyan bold"
+# Custom module to show worktree name (left side, after github module)
+[custom.worktree_branch]
+when = """ [[ $PWD == "$HOME/github/"*/* ]] && [[ "$(echo "${PWD#$HOME/github/}" | cut -d'/' -f2)" == *"--"* ]] """
+command = '''
+relative="${PWD#$HOME/github/}"
+full_repo=$(echo "$relative" | cut -d'/' -f2)
 
-# [custom.not_github_repo]
-# when = """ [[ $PWD != "$HOME/github/"* ]] """
-# command = """basename "$PWD"""
-# style = "cyan bold"
+if [[ "$full_repo" == *"--"* ]]; then
+  branch="${full_repo#*--}"
+  printf '%s' "$branch"
+fi
+'''
+format = '[{$output}](bold yellow) '
+style = "yellow"
 
-# [git_branch]
-# symbol = "git:"
-# style = "bold blue"
-# format = "[$symbol($branch)]($style) "
+[git_branch]
+symbol = " "
+style = "bold purple"
+format = '[$symbol$branch]($style) '
 
-# [git_status]
-# format = '([$all_status$ahead_behind]($style) )'
-# style = "yellow bold"
-# ahead = "⇡${count}"
-# behind = "⇣${count}"
-# diverged = "⇕⇡${ahead_count}⇣${behind_count}"
-# conflicted = "="
-# untracked = "?"
-# stashed = "\\$"
-# modified = "!"
-# staged = "+"
-# renamed = "»"
-# deleted = "✘"
+[git_status]
+format = '([$all_status$ahead_behind]($style) )'
+style = "yellow"
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+conflicted = "="
+untracked = "?"
+stashed = "\\$"
+modified = "!"
+staged = "+"
+renamed = "»"
+deleted = "✘"
 
-# Disable the default directory module since we're using custom
+[cmd_duration]
+min_time = 2_000
+format = '[$duration]($style) '
+style = "dimmed yellow"
+
 [directory]
-disabled = false
+truncate_to_repo = true
 repo_root_format = '[$path]($style)[$read_only]($read_only_style) '
-# repo_root_format = '[]($repo_root_style)[$path]($style)[$read_only]($read_only_style) '
 repo_root_style = "cyan bold"
-# truncation_length = 8
-# truncate_to_repo=false
-# before_repo_root_style = "blue bold"
-# repo_root_style = "cyan bold underline"
-
-
-# Order of modules
-# format = """
-# $character\
-# $directory\
-# $custom\
-# $git_branch\
-# $git_status\
-# """
