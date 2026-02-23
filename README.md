@@ -164,6 +164,15 @@ git config core.hooksPath .githooks
 The hook scans staged files and blocks commits if it detects likely secrets.
 `diff.sh` also uses the same scanner when copying new files from `$HOME`.
 
+Optional pre-sync scan:
+
+```bash
+./bootstrap.sh --scan
+```
+
+Configure path-based skips in `sync-rules.json` and add scanner allowlist rules in
+`scripts/secret-scan.allowlist` (one regex per line).
+
 ## Thanks to…
 
 * [Mathias Bynens](https://github.com/mathiasbynens) and his [dotfiles repository](https://github.com/mathiasbynens/dotfiles) which inspired much of this repository

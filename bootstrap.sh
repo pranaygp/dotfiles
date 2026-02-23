@@ -2,6 +2,13 @@
 
 cd "$(dirname "${BASH_SOURCE}")"
 
+SCAN=false
+for arg in "$@"; do
+  if [ "$arg" = "--scan" ]; then
+    SCAN=true
+  fi
+done
+
 unset choice
 if [ "$1" = "--force" -o "$1" = "-f" -o "$CODESPACES" ]; then
   :
@@ -36,6 +43,14 @@ function doIt() {
         eval "$(fnm env 2>/dev/null || true)"
       fi
     fi
+  fi
+
+  if [ "$SCAN" = true ] && [ -x "./scripts/secret-scan.py" ]; then
+    echo "Running secret scan before sync..."
+    git ls-files -z | xargs -0 -n 1 ./scripts/secret-scan.py --mode paths --path || {
+      echo "Secret scan failed. Aborting sync."
+      exit 1
+    }
   fi
 
   rsync --exclude ".git/" \

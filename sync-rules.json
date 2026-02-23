@@ -1,0 +1,18 @@
+{
+  "ignore": [
+    ".config/raycast/**",
+    ".config/opencode/**",
+    ".config/op/**",
+    ".config/cagent/**",
+    ".config/uv/**",
+    ".config/vercel-datadog-skill/**",
+    ".config/ghostty/*.bak",
+    ".config/**/cache/**",
+    ".config/**/Cache/**"
+  ],
+  "allow": [
+    ".config/raycast/config.json",
+    ".config/code-server/config.yaml",
+    ".config/jj/config.toml"
+  ]
+}

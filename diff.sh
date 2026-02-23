@@ -17,6 +17,7 @@ NC='\033[0m' # No Color
 # Get the current script's directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SECRET_SCAN="$SCRIPT_DIR/scripts/secret-scan.py"
+SYNC_RULES="$SCRIPT_DIR/sync-rules.json"
 
 # List all files in the script's directory (top-level only)
 files=$(
@@ -51,6 +52,34 @@ scan_for_secrets() {
     return 1
   }
   return 0
+}
+
+should_skip_path() {
+  local rel_path="$1"
+  if [ ! -f "$SYNC_RULES" ]; then
+    return 1
+  fi
+  python - "$SYNC_RULES" "$rel_path" <<'PY'
+import fnmatch
+import json
+import sys
+
+rules_path = sys.argv[1]
+rel_path = sys.argv[2]
+
+with open(rules_path, "r") as f:
+    rules = json.load(f)
+
+allow = rules.get("allow", [])
+ignore = rules.get("ignore", [])
+
+if any(fnmatch.fnmatch(rel_path, pat) for pat in allow):
+    sys.exit(1)  # do not skip
+if any(fnmatch.fnmatch(rel_path, pat) for pat in ignore):
+    sys.exit(0)  # skip
+
+sys.exit(1)
+PY
 }
 
 # Loop through the top-level files and compare them with their corresponding files in the home directory
@@ -150,6 +179,10 @@ if [ -d "$HOME/.config" ]; then
       fi
 
       # Ask about the specific file
+      if should_skip_path "$rel_path"; then
+        echo -e "${RED}✗ Skipped $rel_path due to sync-rules.json.${NC}"
+        continue
+      fi
       echo -e "${BLUE}File ${YELLOW}$rel_path${BLUE} exists in home but not in repo."
       read -p "Do you want to copy it to the repo? (y/n): " -n 1 -r
       echo
