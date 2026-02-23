@@ -151,6 +151,19 @@ This installs a comprehensive development environment including:
 Suggestions/improvements
 [welcome](https://github.com/pranaygp/dotfiles/issues)!
 
+## Secrets Safety
+
+This repo includes a lightweight secret scanner and a git pre-commit hook.
+
+Enable the hook for this repo:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The hook scans staged files and blocks commits if it detects likely secrets.
+`diff.sh` also uses the same scanner when copying new files from `$HOME`.
+
 ## Thanks to…
 
 * [Mathias Bynens](https://github.com/mathiasbynens) and his [dotfiles repository](https://github.com/mathiasbynens/dotfiles) which inspired much of this repository

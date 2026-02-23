@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ -x "scripts/secret-scan.py" ]; then
+  scripts/secret-scan.py --mode staged
+fi

@@ -16,6 +16,7 @@ NC='\033[0m' # No Color
 
 # Get the current script's directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SECRET_SCAN="$SCRIPT_DIR/scripts/secret-scan.py"
 
 # List all files in the script's directory (top-level only)
 files=$(
@@ -30,6 +31,27 @@ files=$(
 )
 
 echo -e "${BOLD}${CYAN}Diffing changed files. ~ version will be on the left${NC}"
+
+scan_for_secrets() {
+  local file="$1"
+  if [ ! -x "$SECRET_SCAN" ]; then
+    return 0
+  fi
+  local output
+  output="$("$SECRET_SCAN" --mode paths --path "$file" 2>/dev/null)" || {
+    echo -e "${RED}Potential secrets detected in ${YELLOW}$file${NC}"
+    if [ -n "$output" ]; then
+      echo "$output" | sed 's/^/  /'
+    fi
+    echo -e "${RED}Skipping by default.${NC}"
+    read -p "Type COPY to include anyway: " -r
+    if [ "$REPLY" = "COPY" ]; then
+      return 0
+    fi
+    return 1
+  }
+  return 0
+}
 
 # Loop through the top-level files and compare them with their corresponding files in the home directory
 for file in $files; do
@@ -132,6 +154,10 @@ if [ -d "$HOME/.config" ]; then
       read -p "Do you want to copy it to the repo? (y/n): " -n 1 -r
       echo
       if [[ $REPLY =~ ^[Yy]$ ]]; then
+        if ! scan_for_secrets "$home_file"; then
+          echo -e "${RED}✗ Skipped $rel_path due to potential secrets.${NC}"
+          continue
+        fi
         # Create parent directory if it doesn't exist
         mkdir -p "$(dirname "$repo_file")"
         cp "$home_file" "$repo_file"
