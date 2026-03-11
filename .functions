@@ -487,6 +487,17 @@ function wtcd() {
   fi
 }
 
+# Navigate to the main repo worktree (the one tracking main/master)
+# Usage: wtm
+function wtm() {
+  local main_repo=$(_wt_validate_github_dir)
+  if [[ -z "$main_repo" ]]; then
+    return 1
+  fi
+
+  cd "$main_repo"
+}
+
 # Create a new worktree with a NEW branch
 # Usage: wtn <new-branch-name> [base-ref]
 function wtn() {
