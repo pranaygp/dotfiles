@@ -31,6 +31,11 @@ _set_terminal_title() {
 }
 add-zsh-hook precmd _set_terminal_title
 
+# Fast, deferred GitHub repo/worktree/PR prompt segments for Starship.
+# Does per-prompt work with zsh builtins (no forks) and defers `gh pr view` to a
+# cached background worker — see the file header for the full rationale.
+[[ -f ~/.config/starship/github-prompt.zsh ]] && source ~/.config/starship/github-prompt.zsh
+
 # This is run by zsh-vim-mode to reset the old history search
 function zvm_before_init() {
   zvm_bindkey viins '^[[A' history-beginning-search-backward
@@ -118,3 +123,9 @@ _gt_yargs_completions()
 compdef _gt_yargs_completions gt
 ###-end-gt-completions-###
 
+
+# BEGIN: socket firewall aliases (managed by Iru)
+#alias npm="sfw npm"
+#alias pnpm="sfw pnpm"
+#alias bun="sfw bun"
+# END: socket firewall aliases (managed by Iru)

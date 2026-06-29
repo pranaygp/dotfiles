@@ -6,49 +6,37 @@
 
 add_newline = false
 
-format = '${custom.github_repo_base}${custom.worktree_branch}$directory$character'
-right_format = '$cmd_duration$git_branch$git_status'
+# The github repo / worktree / PR segments are populated fork-free by
+# ~/.config/starship/github-prompt.zsh (sourced from .zshrc) and surfaced here
+# as [env_var] modules. env_var reads cost nothing; the old [custom.*] modules
+# each forked a shell just to evaluate their `when:` condition, which is what
+# made this prompt slow under SentinelOne's per-spawn latency tax.
+format = '${env_var.github_repo}${env_var.worktree}$directory$character'
+right_format = '$cmd_duration$git_branch${env_var.github_pr}$git_status'
 
 [character]
 success_symbol = "[❯](bold green)"
 error_symbol = "[❯](bold red)"
 
-# Custom module to show org/repo for github paths (left side)
-[custom.github_repo_base]
-when = """ [[ $PWD == "$HOME/github/"*/* ]] && git rev-parse --is-inside-work-tree >/dev/null 2>&1 """
-command = '''
-relative="${PWD#$HOME/github/}"
-org=$(echo "$relative" | cut -d'/' -f1)
-full_repo=$(echo "$relative" | cut -d'/' -f2)
+# org/repo for paths under ~/github (worktree repo--branch dirs collapse to repo).
+# Fed by $STARSHIP_GH_REPO; see github-prompt.zsh.
+[env_var.github_repo]
+variable = "STARSHIP_GH_REPO"
+format = '[github\([$env_value](green bold underline)\)](green italic) '
 
-# Detect worktree: repo--branch pattern
-if [[ "$full_repo" == *"--"* ]]; then
-  repo="${full_repo%%--*}"
-  printf '%s/%s' "$org" "$repo"
-else
-  printf '%s/%s' "$org" "$full_repo"
-fi
-'''
-format = '[github\([$output]($style bold underline)\)]($style italic) '
-style = "green"
+# Worktree branch suffix (the repo--branch convention). Fed by $STARSHIP_GH_WT.
+[env_var.worktree]
+variable = "STARSHIP_GH_WT"
+format = '[{$env_value}](bold yellow) '
 
-# Custom module to show worktree name (left side, after github module)
-[custom.worktree_branch]
-when = """ [[ $PWD == "$HOME/github/"*/* ]] && [[ "$(echo "${PWD#$HOME/github/}" | cut -d'/' -f2)" == *"--"* ]] """
-command = '''
-relative="${PWD#$HOME/github/}"
-full_repo=$(echo "$relative" | cut -d'/' -f2)
-
-if [[ "$full_repo" == *"--"* ]]; then
-  branch="${full_repo#*--}"
-  printf '%s' "$branch"
-fi
-'''
-format = '[{$output}](bold yellow) '
-style = "yellow"
+# GitHub PR badge (#number colored by PR state). Fed by $STARSHIP_GH_PR, which
+# is computed by a background worker with stale-while-revalidate caching.
+[env_var.github_pr]
+variable = "STARSHIP_GH_PR"
+format = '$env_value '
 
 [git_branch]
-symbol = " "
+symbol = " "
 style = "bold purple"
 format = '[$symbol$branch]($style) '
 
