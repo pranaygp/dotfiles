@@ -91,7 +91,8 @@ for file in $files; do
   if [ -f "$home_file" ]; then
     if ! cmp --silent "$file" "$home_file"; then
       echo -e "${YELLOW}$rel_path${NC} has changed. Diffing..."
-      code --diff "$home_file" "$file"
+      # code --diff "$home_file" "$file"
+      nvim -d "$home_file" "$file"
     fi
   fi
 done
@@ -130,7 +131,8 @@ if [ -d "$HOME/.config" ]; then
       # File exists in both, compare them
       if ! cmp --silent "$home_file" "$repo_file"; then
         echo -e "${YELLOW}$rel_path${NC} has changed. Diffing..."
-        code --diff "$home_file" "$repo_file"
+        # code --diff "$home_file" "$repo_file"
+        nvim -d "$home_file" "$repo_file"
       fi
     else
       # File exists in home but not in repo
