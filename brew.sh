@@ -54,8 +54,10 @@ brew link --overwrite python@3.12
 # Install other useful binaries.
 brew install 1password-cli
 brew install ast-grep
+brew install bkt
 brew install bat
 brew install deno
+brew install displayplacer
 brew install fd
 brew install ffmpeg
 brew install fzf
@@ -92,6 +94,9 @@ brew install zstd
 brew install direnv
 brew install eza
 brew install fnm
+
+# GUI apps
+brew install --cask hammerspoon
 
 # Remove outdated versions from the cellar.
 brew cleanup
