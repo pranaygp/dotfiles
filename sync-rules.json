@@ -12,6 +12,7 @@
   ],
   "allow": [
     ".config/raycast/config.json",
+    ".config/raycast/script-commands/**",
     ".config/code-server/config.yaml",
     ".config/jj/config.toml"
   ]
